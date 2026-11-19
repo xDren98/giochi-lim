@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Body Parts - LIM Game</title>
+    <style>
+        body { font-family: 'Comic Sans MS', sans-serif; background-color: #e0f7fa; text-align: center; margin: 0; padding: 20px; }
+        h1 { color: #ff5722; font-size: 3.5vw; text-shadow: 2px 2px #ffccbc; }
+        .instruction { font-size: 2vw; color: #00796b; margin-bottom: 20px; }
+        .game-container { display: flex; justify-content: center; gap: 8vw; margin-top: 20px; }
+        .col { display: flex; flex-direction: column; gap: 20px; }
+        .card { 
+            width: 18vw; height: 10vh; 
+            background: white; border: 6px solid #4caf50; border-radius: 15px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 2.5vw; font-weight: bold; cursor: pointer; user-select: none;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2); transition: transform 0.2s;
+        }
+        .card:active { transform: scale(0.95); }
+        .emoji-card { font-size: 4vw; border-color: #2196f3; }
+        .selected { background-color: #fff9c4; border-color: #ff9800; transform: scale(1.1); }
+        .hidden { visibility: hidden; }
+        #message { font-size: 3vw; font-weight: bold; color: #e91e63; height: 4vw; margin-top: 20px; }
+        .btn-reset { 
+            margin-top: 20px; padding: 15px 30px; font-size: 2vw; 
+            background-color: #ff5722; color: white; border: none; border-radius: 10px; 
+            cursor: pointer; box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+        }
+        .btn-reset:hover { background-color: #e64a19; }
+        .btn-home {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #ffffff;
+            color: #ff5722;
+            border: 3px solid #ff5722;
+            padding: 8px 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s, color 0.2s;
+        }
+        .btn-home:hover, .btn-home:active {
+            background-color: #ff5722;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="btn-home">🏠 Menu Giochi</a>
+
+    <h1>🌟 MY BODY PARTS 🌟</h1>
+    <div class="instruction">Tap a word, then tap the picture! (Tocca la parola e poi l'immagine)</div>
+
+    <div class="game-container">
+        <div class="col" id="words">
+            <div class="card word" data-match="head">HEAD</div>
+            <div class="card word" data-match="arms">ARMS</div>
+            <div class="card word" data-match="hands">HANDS</div>
+            <div class="card word" data-match="tummy">TUMMY</div>
+            <div class="card word" data-match="legs">LEGS</div>
+            <div class="card word" data-match="feet">FEET</div>
+        </div>
+        <div class="col" id="images">
+            <div class="card emoji-card" data-match="legs">👖</div>
+            <div class="card emoji-card" data-match="hands">🖐️</div>
+            <div class="card emoji-card" data-match="tummy">👕</div>
+            <div class="card emoji-card" data-match="feet">👟</div>
+            <div class="card emoji-card" data-match="head">👦</div>
+            <div class="card emoji-card" data-match="arms">💪</div>
+        </div>
+    </div>
+
+    <div id="message"></div>
+    <button class="btn-reset" onclick="location.reload()">🔄 Play Again!</button>
+
+    <script>
+        let selectedWord = null;
+        let selectedImage = null;
+        let matches = 0;
+
+        const words = document.querySelectorAll('.word');
+        const images = document.querySelectorAll('.emoji-card');
+        const msg = document.getElementById('message');
+
+        // Shuffle images column on load
+        const imagesCol = document.getElementById('images');
+        for (let i = imagesCol.children.length; i >= 0; i--) {
+            imagesCol.appendChild(imagesCol.children[Math.random() * i | 0]);
+        }
+
+        words.forEach(w => w.addEventListener('click', () => {
+            words.forEach(x => x.classList.remove('selected'));
+            w.classList.add('selected');
+            selectedWord = w;
+            checkMatch();
+        }));
+
+        images.forEach(i => i.addEventListener('click', () => {
+            images.forEach(x => x.classList.remove('selected'));
+            i.classList.add('selected');
+            selectedImage = i;
+            checkMatch();
+        }));
+
+        function checkMatch() {
+            if(selectedWord && selectedImage) {
+                if(selectedWord.dataset.match === selectedImage.dataset.match) {
+                    msg.textContent = "🎉 YES! GOOD JOB! 🎉";
+                    msg.style.color = "#4caf50";
+                    let w = selectedWord;
+                    let img = selectedImage;
+                    setTimeout(() => {
+                        w.style.visibility = 'hidden';
+                        img.style.visibility = 'hidden';
+                        w.classList.remove('selected');
+                        img.classList.remove('selected');
+                        selectedWord = null;
+                        selectedImage = null;
+                        msg.textContent = "";
+                        matches++;
+                        if(matches === 6) {
+                            msg.textContent = "🏆 AMAZING! YOU WIN! 🏆";
+                            msg.style.color = "#ff5722";
+                        }
+                    }, 1000);
+                } else {
+                    msg.textContent = "❌ Oh no! Try again! ❌";
+                    msg.style.color = "#f44336";
+                    setTimeout(() => {
+                        selectedWord.classList.remove('selected');
+                        selectedImage.classList.remove('selected');
+                        selectedWord = null;
+                        selectedImage = null;
+                        msg.textContent = "";
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

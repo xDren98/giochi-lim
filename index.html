@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌟 LIM English Corner - Giochi Didattici Interattivi 🌟</title>
+    <style>
+        :root {
+            --primary: #ff5722;
+            --primary-dark: #e64a19;
+            --secondary: #4caf50;
+            --secondary-dark: #388e3c;
+            --accent: #2196f3;
+            --yellow: #ffc107;
+            --bg-gradient: linear-gradient(135deg, #b3e5fc 0%, #e1f5fe 40%, #fff9c4 100%);
+            --text-dark: #263238;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 4px solid #ffffff;
+            border-radius: 24px;
+            padding: 16px 28px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-icon {
+            font-size: 3rem;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .title-group h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+            color: var(--primary);
+            text-shadow: 2px 2px #ffe0b2;
+            letter-spacing: 0.5px;
+        }
+
+        .title-group p {
+            margin: 4px 0 0 0;
+            font-size: clamp(0.9rem, 1.6vw, 1.15rem);
+            color: #00796b;
+            font-weight: bold;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-fullscreen {
+            background: #ffffff;
+            border: 3px solid #2196f3;
+            color: #1976d2;
+            border-radius: 16px;
+            padding: 10px 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-fullscreen:hover, .btn-fullscreen:active {
+            background: #2196f3;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            width: 100%;
+            max-width: 1100px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 3px dashed #ff9800;
+            border-radius: 20px;
+            padding: 14px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            font-weight: bold;
+            color: #d84315;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* GRID GIOCHI */
+        .games-grid {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* GAME CARD */
+        .game-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border: 5px solid transparent;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            background: #e0f2f1;
+            color: #00796b;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-emoji-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            margin-bottom: 16px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            margin: 0 0 6px 0;
+            font-size: 1.6rem;
+            color: #1a237e;
+        }
+
+        .card-sub {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #546e7a;
+            margin-bottom: 12px;
+        }
+
+        .card-desc {
+            font-size: 0.98rem;
+            line-height: 1.45;
+            color: #455a64;
+            margin-bottom: 22px;
+            flex-grow: 1;
+        }
+
+        .btn-play {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+            transition: all 0.2s ease;
+        }
+
+        .btn-play:hover, .btn-play:active {
+            transform: scale(1.03);
+            filter: brightness(1.1);
+        }
+
+        /* CARD AGGIUNGI NUOVO GIOCO */
+        .card-add {
+            background: rgba(255, 255, 255, 0.6);
+            border: 4px dashed #90a4ae;
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 320px;
+            color: #546e7a;
+        }
+
+        .card-add .add-icon {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            color: #78909c;
+        }
+
+        .card-add h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.4rem;
+            color: #37474f;
+        }
+
+        .card-add p {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 0;
+            max-width: 280px;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #546e7a;
+            padding: 15px;
+        }
+
+        footer b {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER BAR -->
+    <header>
+        <div class="header-brand">
+            <div class="brand-icon">🎒</div>
+            <div class="title-group">
+                <h1>🌟 LIM ENGLISH CORNER 🌟</h1>
+                <p>Scuola Primaria • Lavagna Interattiva Multimediale (LIM) • Classe II</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-fullscreen" id="btnFs" onclick="toggleFullScreen()">
+                <span>⛶</span> Schermo Intero
+            </button>
+        </div>
+    </header>
+
+    <!-- BANNER ISTRUZIONI -->
+    <div class="hero-banner">
+        👆 <b>Tocca uno dei giochi qui sotto</b> con le dita o la penna touch per iniziare l'attività sulla LIM!
+    </div>
+
+    <!-- GRIGLIA GIOCHI MODULARE -->
+    <main class="games-grid" id="gamesGrid">
+        <!-- I giochi vengono renderizzati dinamicamente dal codice JS qui sotto -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        English Fun for Kids • Progettato per LIM, Tablet e Computer • <b>Tocca e impara!</b>
+    </footer>
+
+    <script>
+        /**
+         * =========================================================================
+         * REGISTRO MODULARE DEI GIOCHI
+         * =========================================================================
+         * Per aggiungere un nuovo gioco in futuro, basta duplicare uno dei blocchi
+         * qui sotto e inserire il titolo, la descrizione e il percorso del file HTML!
+         */
+        const GIOCHI = [
+            {
+                id: "body-parts",
+                title: "My Body Parts",
+                subtitle: "Matching: Parola & Immagine",
+                desc: "Tocca la parola in inglese (Head, Arms, Hands...) e abbinala alla figura o all'emoji corretta! Ideale per riscaldamento e rinforzo.",
+                emoji: "🧩",
+                color: "#4caf50",
+                bgGradient: "linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)",
+                tag: "Vocabolario Base",
+                btnText: "▶ Gioca a Body Parts",
+                file: "games/gioco_LIM_body_parts.html"
+            },
+            {
+                id: "body-adventure",
+                title: "The Body Adventure",
+                subtitle: "Simon Says, Monster Lab & Memory",
+                desc: "3 attività complete in una: Simon Says con sagoma SVG interattiva e audio, laboratorio dei mostri e il grande memory delle parti del corpo!",
+                emoji: "🚀",
+                color: "#ff5722",
+                bgGradient: "linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%)",
+                tag: "Open Day • 3 Attività",
+                btnText: "▶ Esplora l'Avventura",
+                file: "games/gioco_LIM_body_adventure.html"
+            }
+        ];
+
+        // RENDER DELLA GRIGLIA GIOCHI
+        const grid = document.getElementById('gamesGrid');
+
+        GIOCHI.forEach(gioco => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.style.borderColor = gioco.color;
+
+            card.innerHTML = `
+                <div class="card-tag" style="background:${gioco.color}22; color:${gioco.color};">${gioco.tag}</div>
+                <div>
+                    <div class="card-emoji-wrap" style="background:${gioco.bgGradient}; border: 3px solid ${gioco.color};">
+                        ${gioco.emoji}
+                    </div>
+                    <h2 class="card-title">${gioco.title}</h2>
+                    <div class="card-sub">${gioco.subtitle}</div>
+                    <div class="card-desc">${gioco.desc}</div>
+                </div>
+                <a href="${gioco.file}" class="btn-play" style="background:${gioco.color};">
+                    ${gioco.btnText}
+                </a>
+            `;
+            grid.appendChild(card);
+        });
+
+        // CARD "IN ARRIVO" (Mostra quanto è facile aggiungere giochi)
+        const addCard = document.createElement('div');
+        addCard.className = 'card-add';
+        addCard.innerHTML = `
+            <div class="add-icon">✨</div>
+            <h3>Altri Giochi in Arrivo</h3>
+            <p>Questa piattaforma è predisposta per accogliere nuove attività didattiche, quiz e canzoni!</p>
+        `;
+        grid.appendChild(addCard);
+
+        // MODALITÀ FULLSCREEN PER LIM
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    document.getElementById('btnFs').innerHTML = '<span>✕</span> Esci Schermo Intero';
+                }).catch(err => {
+                    console.log("Fullscreen not supported or blocked: ", err);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().then(() => {
+                        document.getElementById('btnFs').innerHTML = '<span>⛶</span> Schermo Intero';
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
