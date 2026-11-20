@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🖐️ My Body Game - LIM (Classe II)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="educational-speech.js?v=3.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* Button hover effects optimized for touch/LIM */
+        .btn-hover {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-hover:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); 
+        }
+        .btn-hover:active { 
+            transform: translateY(2px); 
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); 
+        }
+
+        .screen { display: none; }
+        .screen.active { display: flex; }
+    </style>
+</head>
+<body class="w-screen h-screen flex flex-col bg-emerald-50">
+
+    <!-- Header & Scoreboard -->
+    <header class="w-full p-4 bg-white/95 backdrop-blur-md shadow-md flex justify-between items-center z-10 border-b-4 border-emerald-200">
+        <div class="flex items-center gap-3">
+            <a href="../index.html" class="px-5 py-2 bg-white text-emerald-700 border-2 border-emerald-600 rounded-full font-bold text-lg md:text-xl btn-hover shadow-md flex items-center gap-2 no-underline hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer">
+                🏠 Menu Giochi
+            </a>
+            <button id="homeBtn" onclick="showMenu()" class="hidden px-5 py-2 bg-emerald-500 text-white rounded-full font-bold text-lg md:text-xl btn-hover shadow-md border-b-4 border-emerald-700 cursor-pointer">
+                🔙 Scegli Modalità
+            </button>
+            <h1 class="text-2xl md:text-3xl font-bold text-emerald-700 drop-shadow-sm hidden lg:block">🖐️ My Body Game</h1>
+        </div>
+
+        <!-- TEAM SCOREBOARD -->
+        <div class="flex gap-4">
+            <button onclick="addScore('A')" class="flex items-center gap-3 px-6 py-2 bg-rose-500 text-white rounded-2xl font-bold text-2xl btn-hover shadow-lg border-b-4 border-rose-700 cursor-pointer">
+                TEAM A <span id="scoreA" class="bg-white text-rose-600 px-3 py-0.5 rounded-xl shadow-inner">0</span>
+            </button>
+            <button onclick="addScore('B')" class="flex items-center gap-3 px-6 py-2 bg-blue-500 text-white rounded-2xl font-bold text-2xl btn-hover shadow-lg border-b-4 border-blue-700 cursor-pointer">
+                TEAM B <span id="scoreB" class="bg-white text-blue-600 px-3 py-0.5 rounded-xl shadow-inner">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 relative w-full h-full overflow-hidden flex items-center justify-center p-4">
+        
+        <!-- MENU SCREEN -->
+        <section id="menuScreen" class="screen active flex-col items-center justify-center w-full max-w-5xl">
+            <h2 class="text-5xl md:text-7xl font-bold text-center text-emerald-700 drop-shadow-md mb-10 pop-in">
+                Choose a Game!
+            </h2>
+            
+            <div class="flex flex-col md:flex-row gap-8 w-full px-4">
+                <!-- Game 1 Button -->
+                <button onclick="startGame(1)" class="flex-1 bg-amber-400 border-b-8 border-amber-600 text-amber-900 p-8 md:p-10 rounded-3xl btn-hover pop-in flex flex-col items-center cursor-pointer shadow-xl" style="animation-delay: 0.1s;">
+                    <span class="text-7xl mb-4">🇮🇹➡️🇬🇧</span>
+                    <span class="text-4xl md:text-5xl font-bold mb-2 text-center">Word Match</span>
+                    <span class="text-2xl opacity-90 text-center">(Trova la parola giusta)</span>
+                </button>
+                
+                <!-- Game 2 Button -->
+                <button onclick="startGame(2)" class="flex-1 bg-violet-400 border-b-8 border-violet-600 text-violet-900 p-8 md:p-10 rounded-3xl btn-hover pop-in flex flex-col items-center cursor-pointer shadow-xl" style="animation-delay: 0.2s;">
+                    <span class="text-7xl mb-4">A E I O U</span>
+                    <span class="text-4xl md:text-5xl font-bold mb-2 text-center">Missing Vowel</span>
+                    <span class="text-2xl opacity-90 text-center">(Trova la vocale)</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- GAME SCREEN (Dynamic) -->
+        <section id="gameScreen" class="screen flex-col items-center justify-center w-full max-w-6xl">
+            <div class="bg-white/95 p-8 md:p-12 rounded-[3rem] shadow-2xl w-full text-center border-8 border-emerald-200 relative min-h-[460px] flex flex-col justify-center">
+                
+                <!-- Question text -->
+                <div id="questionContainer" class="mb-8 md:mb-10 h-28 flex items-center justify-center">
+                    <h2 id="questionText" class="text-6xl md:text-8xl font-bold text-slate-800 leading-tight">
+                        <!-- Injected by JS -->
+                    </h2>
+                </div>
+
+                <!-- Options Area (Grid for G1, Flex for G2) -->
+                <div id="optionsArea" class="w-full">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Next Button -->
+                <div id="nextBtnContainer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 hidden z-50">
+                    <button onclick="generateQuestion()" class="bg-green-500 hover:bg-green-400 text-white border-b-8 border-green-700 font-bold text-3xl md:text-4xl py-4 px-12 md:py-6 md:px-16 rounded-full shadow-2xl transition-transform active:scale-95 flex items-center gap-4 animate-bounce cursor-pointer">
+                        Next Turn <span class="text-4xl md:text-5xl">➡️</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- SCOREBOARD LOGIC ---
+        let teamAScore = 0;
+        let teamBScore = 0;
+
+        function addScore(team) {
+            if (team === 'A') {
+                teamAScore++;
+                document.getElementById('scoreA').innerText = teamAScore;
+                animateScore('scoreA');
+                confetti({ particleCount: 50, spread: 60, origin: { x: 0.2, y: 0.1 }, colors: ['#f43f5e', '#ffffff'] });
+            } else {
+                teamBScore++;
+                document.getElementById('scoreB').innerText = teamBScore;
+                animateScore('scoreB');
+                confetti({ particleCount: 50, spread: 60, origin: { x: 0.8, y: 0.1 }, colors: ['#3b82f6', '#ffffff'] });
+            }
+        }
+
+        function animateScore(elementId) {
+            const el = document.getElementById(elementId);
+            el.classList.remove('pop-in');
+            void el.offsetWidth; 
+            el.classList.add('pop-in');
+        }
+
+        // --- NAVIGATION ---
+        const screens = document.querySelectorAll('.screen');
+        const homeBtn = document.getElementById('homeBtn');
+        let currentGameMode = 1;
+
+        function switchScreen(screenId) {
+            screens.forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            homeBtn.classList.toggle('hidden', screenId === 'menuScreen');
+        }
+
+        function showMenu() {
+            switchScreen('menuScreen');
+            document.getElementById('nextBtnContainer').classList.add('hidden');
+        }
+
+        function startGame(mode) {
+            currentGameMode = mode;
+            switchScreen('gameScreen');
+            generateQuestion();
+        }
+
+        // --- GAME LOGIC & DICTIONARY ---
+        const bodyVocab = [
+            { it: "Testa", en: "Head", missing: "H _ A D", ans: "E" },
+            { it: "Occhi", en: "Eyes", missing: "E Y _ S", ans: "E" },
+            { it: "Capelli", en: "Hair", missing: "H _ I R", ans: "A" },
+            { it: "Labbra", en: "Lips", missing: "L _ P S", ans: "I" },
+            { it: "Orecchie", en: "Ears", missing: "_ A R S", ans: "E" },
+            { it: "Braccia", en: "Arms", missing: "_ R M S", ans: "A" },
+            { it: "Mani", en: "Hands", missing: "H _ N D S", ans: "A" },
+            { it: "Gambe", en: "Legs", missing: "L _ G S", ans: "E" },
+            { it: "Ginocchia", en: "Knees", missing: "K N _ E S", ans: "E" },
+            { it: "Piedi", en: "Feet", missing: "F _ E T", ans: "E" }
+        ];
+
+        function generateQuestion() {
+            document.getElementById('nextBtnContainer').classList.add('hidden');
+            const optionsArea = document.getElementById('optionsArea');
+            optionsArea.innerHTML = '';
+            
+            const questionEl = document.getElementById('questionText');
+            questionEl.classList.remove('pop-in');
+            void questionEl.offsetWidth;
+            questionEl.classList.add('pop-in');
+
+            // Pick a random word from the 10 targets
+            const targetItem = bodyVocab[Math.floor(Math.random() * bodyVocab.length)];
+
+            if (currentGameMode === 1) {
+                // GAME 1: WORD MATCH (Italian to English)
+                questionEl.innerText = targetItem.it;
+                questionEl.className = "text-6xl md:text-8xl font-bold text-slate-800 leading-tight";
+
+                // Setup grid container
+                optionsArea.className = "grid grid-cols-1 md:grid-cols-2 gap-6 w-full";
+
+                let options = [targetItem.en];
+                let distractors = bodyVocab.filter(v => v.en !== targetItem.en);
+                
+                // Get 3 random distractors
+                for(let i=0; i<3; i++) {
+                    let randIndex = Math.floor(Math.random() * distractors.length);
+                    options.push(distractors[randIndex].en);
+                    distractors.splice(randIndex, 1);
+                }
+
+                // Shuffle options
+                options.sort(() => Math.random() - 0.5);
+
+                options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = `bg-indigo-100 border-b-8 border-indigo-300 text-indigo-900 text-4xl md:text-5xl font-bold py-7 px-4 rounded-3xl btn-hover transition-all w-full cursor-pointer shadow-md`;
+                    btn.innerText = opt;
+                    btn.onclick = () => handleAnswer(btn, opt === targetItem.en, targetItem.en);
+                    optionsArea.appendChild(btn);
+                });
+
+            } else {
+                // GAME 2: MISSING VOWEL
+                questionEl.innerText = targetItem.missing;
+                questionEl.className = "text-[5rem] md:text-[8rem] font-bold text-slate-800 leading-none tracking-[0.2em] font-mono";
+
+                // Setup flex container for 5 vowels
+                optionsArea.className = "flex flex-wrap justify-center gap-6 w-full mt-6";
+                
+                const vowels = ['A', 'E', 'I', 'O', 'U'];
+                
+                vowels.forEach(v => {
+                    const btn = document.createElement('button');
+                    btn.className = `bg-sky-100 border-b-8 border-sky-300 text-sky-900 text-5xl md:text-6xl font-bold py-6 px-10 rounded-3xl btn-hover transition-all flex-1 min-w-[110px] max-w-[150px] cursor-pointer shadow-md`;
+                    btn.innerText = v;
+                    btn.onclick = () => handleAnswer(btn, v === targetItem.ans, targetItem.en);
+                    optionsArea.appendChild(btn);
+                });
+            }
+        }
+
+        function handleAnswer(btn, isCorrect, fullWord = null) {
+            const allBtns = document.getElementById('optionsArea').querySelectorAll('button');
+            allBtns.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('btn-hover');
+                b.style.pointerEvents = 'none';
+            });
+
+            if (isCorrect) {
+                // Correct animation
+                btn.classList.remove('bg-indigo-100', 'border-indigo-300', 'text-indigo-900', 'bg-sky-100', 'border-sky-300', 'text-sky-900');
+                btn.classList.add('bg-green-500', 'border-green-700', 'text-white', 'scale-105');
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                
+                // Audio pronunciation
+                if (fullWord) {
+                    speakEnglish("Super! " + fullWord);
+                } else {
+                    speakEnglish(btn.innerText);
+                }
+
+                // If Game 2, reveal the full word
+                if (currentGameMode === 2 && fullWord) {
+                    const qText = document.getElementById('questionText');
+                    qText.innerText = fullWord;
+                    qText.classList.remove('font-mono');
+                    qText.classList.add('text-green-600', 'tracking-normal');
+                }
+            } else {
+                // Wrong animation
+                btn.classList.remove('bg-indigo-100', 'border-indigo-300', 'bg-sky-100', 'border-sky-300');
+                btn.classList.add('bg-red-500', 'border-red-700', 'text-white', 'shake');
+                if (fullWord) {
+                    speakEnglish(fullWord);
+                }
+            }
+            
+            // Show Next Button
+            document.getElementById('nextBtnContainer').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
