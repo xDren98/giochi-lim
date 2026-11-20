@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+    <title>📚 School Subjects Challenge - Grade 5 (Classe Quinta) 📚</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #059669;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 50%, #fef3c7 100%);
+            margin: 0;
+            padding: 12px 18px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 22px;
+            border-radius: 22px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            border: 3px solid #fff;
+        }
+
+        .title-group h1 {
+            margin: 0;
+            font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .title-group .sub {
+            font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-ctrl {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 8px 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-ctrl:active { transform: scale(0.92); }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 3px solid #cbd5e1;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover { background: #f8fafc; }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border-color: #818cf8;
+            transform: scale(1.04);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+        }
+
+        /* MAIN PANEL */
+        main {
+            width: 100%;
+            max-width: 1100px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-panel {
+            display: none;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 26px;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .game-panel.active { display: flex; }
+
+        /* ==================== TAB 1: SUBJECT DETECTIVE (CLUE QUIZ) ==================== */
+        .quiz-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .score-pill {
+            background: #eef2ff;
+            border: 2px solid #c7d2fe;
+            color: #3730a3;
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .streak-pill {
+            background: #fef3c7;
+            border: 2px solid #fde68a;
+            color: #92400e;
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .clue-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 3px solid #86efac;
+            border-radius: 22px;
+            padding: 18px 24px;
+            width: 100%;
+            max-width: 860px;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .clue-box:hover { transform: scale(1.01); }
+
+        .clue-icon {
+            font-size: 3rem;
+            background: white;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            animation: pulse-speaker 1.5s infinite;
+        }
+
+        @keyframes pulse-speaker {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .clue-text-group { flex: 1; }
+        .clue-question {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: #065f46;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .clue-statement {
+            font-size: clamp(1.15rem, 2vw, 1.45rem);
+            font-weight: 700;
+            color: #064e3b;
+            line-height: 1.35;
+        }
+        .clue-hint {
+            font-size: 0.9rem;
+            color: #047857;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* 4 OPTION CARDS */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 860px;
+        }
+
+        .subject-card {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .subject-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: #818cf8;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+        }
+        .subject-card:active { transform: scale(0.95); }
+
+        .subject-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            flex-shrink: 0;
+        }
+
+        .subject-info { flex: 1; }
+        .subject-name {
+            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            font-weight: 800;
+            color: #1e293b;
+        }
+        .subject-sub {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .subject-card.correct-anim {
+            background: #dcfce7;
+            border-color: #22c55e;
+            animation: bounce-card 0.5s ease;
+        }
+        @keyframes bounce-card {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .subject-card.wrong-anim {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        .feedback-banner {
+            font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+            font-weight: 800;
+            min-height: 2.2rem;
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        /* ==================== TAB 2: SCHOOL TIMETABLE ==================== */
+        .timetable-container {
+            width: 100%;
+            max-width: 950px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border: 2px solid #e2e8f0;
+        }
+
+        .timetable-table th, .timetable-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .timetable-table th {
+            background: #4f46e5;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .time-col {
+            background: #f8fafc;
+            font-weight: 800;
+            color: #475569;
+            width: 95px;
+            font-size: 0.95rem;
+        }
+
+        .tt-slot {
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+            padding: 8px 4px;
+        }
+        .tt-slot:hover {
+            background: #eef2ff;
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+        }
+
+        .tt-slot-badge {
+            font-size: 1.6rem;
+            margin-bottom: 2px;
+        }
+        .tt-slot-name {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
+        .timetable-prompt-bar {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            border-radius: 16px;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 950px;
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        /* ==================== TAB 3: SPEAKING & SENTENCE BUILDER ==================== */
+        .sentence-builder-box {
+            width: 100%;
+            max-width: 900px;
+            background: #f8fafc;
+            border: 3px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .builder-row {
+            margin-bottom: 16px;
+        }
+
+        .builder-label {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #334155;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip-btn {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #1e293b;
+        }
+        .chip-btn:hover { background: #f1f5f9; }
+        .chip-btn.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #3730a3;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .sentence-preview-card {
+            background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+            border: 3px dashed #6366f1;
+            border-radius: 20px;
+            padding: 18px 24px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .sentence-preview-text {
+            font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+            font-weight: 900;
+            color: #312e81;
+            margin-bottom: 8px;
+        }
+
+        .sentence-preview-it {
+            font-size: 1.05rem;
+            color: #475569;
+            font-style: italic;
+        }
+
+        .speaking-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 12px 24px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.15s;
+        }
+        .btn-action:active { transform: scale(0.94); }
+        .btn-action.green {
+            background: linear-gradient(135deg, #059669, #10b981);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        /* ==================== TAB 4: VOCABULARY EXPLORER ==================== */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            width: 100%;
+            max-width: 950px;
+            margin-top: 10px;
+        }
+
+        .vocab-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            transition: all 0.2s;
+        }
+        .vocab-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: #6366f1;
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.15);
+        }
+
+        .vocab-badge {
+            font-size: 2.2rem;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .vocab-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+        .vocab-sub {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* WIN MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show { display: flex; }
+
+        .modal-card {
+            background: white;
+            border: 5px solid #4f46e5;
+            border-radius: 28px;
+            padding: 30px 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+            animation: pop-modal 0.3s ease;
+        }
+        @keyframes pop-modal {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-card h2 {
+            font-size: 2rem;
+            color: #3730a3;
+            margin: 0 0 10px 0;
+        }
+
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .vocab-grid { grid-template-columns: repeat(2, 1fr); }
+            .tabs { gap: 6px; }
+            .tab-btn { padding: 8px 14px; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- HEADER -->
+    <header>
+        <div class="title-group">
+            <h1>📚 SCHOOL SUBJECTS CHALLENGE 📚</h1>
+            <div class="sub">Scuola Gesù Eucaristico • Classe V • Interactive LIM Game & Speaking Lab</div>
+        </div>
+        <div class="header-controls">
+            <a href="../index.html" class="btn-ctrl" style="text-decoration:none; color:inherit; background:#fff3e0; border-color:#ff9800; font-weight:bold;" title="Torna all'Hub Giochi">
+                🏠 Menu Giochi
+            </a>
+            <button class="btn-ctrl" id="btnSoundToggle" title="Audio On/Off">
+                <span id="soundIcon">🔊</span> Audio ON
+            </button>
+            <button class="btn-ctrl" id="btnResetQuiz" title="Reset Quiz">
+                🔄 Reset
+            </button>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="detective">
+            🎯 1. Clue Quiz (Indovina la Materia)
+        </button>
+        <button class="tab-btn" data-tab="timetable">
+            📅 2. School Timetable (Orario Scolastico)
+        </button>
+        <button class="tab-btn" data-tab="speaking">
+            🗣️ 3. Speaking Lab: "My Favourite Subject"
+        </button>
+        <button class="tab-btn" data-tab="vocab">
+            📖 4. Talking Subjects Glossary
+        </button>
+    </nav>
+
+    <!-- MAIN PANELS -->
+    <main>
+
+        <!-- ==================== TAB 1: CLUE QUIZ ==================== -->
+        <section class="game-panel active" id="panel-detective">
+            
+            <div class="quiz-header">
+                <div class="score-pill">
+                    ⭐ Score: <span id="quizScore">0</span> / 8
+                </div>
+                <div class="streak-pill">
+                    🔥 Streak: <span id="quizStreak">0</span> in a row!
+                </div>
+            </div>
+
+            <!-- CLUE BOX -->
+            <div class="clue-box" id="clueBox">
+                <div class="clue-icon">🔊</div>
+                <div class="clue-text-group">
+                    <div class="clue-question">WHO AM I? • GUESS THE SUBJECT:</div>
+                    <div class="clue-statement" id="clueText">"Loading riddle..."</div>
+                    <div class="clue-hint" id="clueSubHint">Tocca qui per riascoltare l'indizio audio in inglese 🎧</div>
+                </div>
+            </div>
+
+            <!-- 4 OPTIONS GRID -->
+            <div class="options-grid" id="optionsGrid">
+                <!-- Dynamically generated 4 cards -->
+            </div>
+
+            <div class="feedback-banner" id="quizFeedback">Leggi e ascolta l'indizio, poi tocca la materia corretta! 👆</div>
+        </section>
+
+        <!-- ==================== TAB 2: TIMETABLE ==================== -->
+        <section class="game-panel" id="panel-timetable">
+            <div class="timetable-prompt-bar">
+                🗓️ Tocca una materia nell'orario per ascoltare la frase in inglese: <i>"On [Day] at [Time], I have [Subject]!"</i>
+            </div>
+
+            <div class="timetable-container">
+                <table class="timetable-table">
+                    <thead>
+                        <tr>
+                            <th>Time / Hour</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-col">08:30 - 09:30</td>
+                            <td><div class="tt-slot" data-day="Monday" data-time="half past eight" data-subject="Italian"><div class="tt-slot-badge">✍️</div><div class="tt-slot-name">Italian</div></div></td>
+                            <td><div class="tt-slot" data-day="Tuesday" data-time="half past eight" data-subject="Maths"><div class="tt-slot-badge">📐</div><div class="tt-slot-name">Maths</div></div></td>
+                            <td><div class="tt-slot" data-day="Wednesday" data-time="half past eight" data-subject="English"><div class="tt-slot-badge">🇬🇧</div><div class="tt-slot-name">English</div></div></td>
+                            <td><div class="tt-slot" data-day="Thursday" data-time="half past eight" data-subject="History"><div class="tt-slot-badge">🏛️</div><div class="tt-slot-name">History</div></div></td>
+                            <td><div class="tt-slot" data-day="Friday" data-time="half past eight" data-subject="Science"><div class="tt-slot-badge">🔬</div><div class="tt-slot-name">Science</div></div></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">09:30 - 10:30</td>
+                            <td><div class="tt-slot" data-day="Monday" data-time="half past nine" data-subject="Maths"><div class="tt-slot-badge">📐</div><div class="tt-slot-name">Maths</div></div></td>
+                            <td><div class="tt-slot" data-day="Tuesday" data-time="half past nine" data-subject="Science"><div class="tt-slot-badge">🔬</div><div class="tt-slot-name">Science</div></div></td>
+                            <td><div class="tt-slot" data-day="Wednesday" data-time="half past nine" data-subject="Art"><div class="tt-slot-badge">🎨</div><div class="tt-slot-name">Art</div></div></td>
+                            <td><div class="tt-slot" data-day="Thursday" data-time="half past nine" data-subject="Geography"><div class="tt-slot-badge">🌍</div><div class="tt-slot-name">Geography</div></div></td>
+                            <td><div class="tt-slot" data-day="Friday" data-time="half past nine" data-subject="English"><div class="tt-slot-badge">🇬🇧</div><div class="tt-slot-name">English</div></div></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:30 - 11:00</td>
+                            <td colspan="5" style="background:#fef3c7; font-weight:800; color:#b45309; letter-spacing:2px;">
+                                🍎 BREAK TIME / RECREATION 🥪
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">11:00 - 12:00</td>
+                            <td><div class="tt-slot" data-day="Monday" data-time="eleven o'clock" data-subject="History"><div class="tt-slot-badge">🏛️</div><div class="tt-slot-name">History</div></div></td>
+                            <td><div class="tt-slot" data-day="Tuesday" data-time="eleven o'clock" data-subject="English"><div class="tt-slot-badge">🇬🇧</div><div class="tt-slot-name">English</div></div></td>
+                            <td><div class="tt-slot" data-day="Wednesday" data-time="eleven o'clock" data-subject="R.E."><div class="tt-slot-badge">✝️</div><div class="tt-slot-name">R.E.</div></div></td>
+                            <td><div class="tt-slot" data-day="Thursday" data-time="eleven o'clock" data-subject="Music"><div class="tt-slot-badge">🎵</div><div class="tt-slot-name">Music</div></div></td>
+                            <td><div class="tt-slot" data-day="Friday" data-time="eleven o'clock" data-subject="P.E."><div class="tt-slot-badge">⚽</div><div class="tt-slot-name">P.E.</div></div></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">12:00 - 13:00</td>
+                            <td><div class="tt-slot" data-day="Monday" data-time="twelve o'clock" data-subject="Geography"><div class="tt-slot-badge">🌍</div><div class="tt-slot-name">Geography</div></div></td>
+                            <td><div class="tt-slot" data-day="Tuesday" data-time="twelve o'clock" data-subject="P.E."><div class="tt-slot-badge">⚽</div><div class="tt-slot-name">P.E.</div></div></td>
+                            <td><div class="tt-slot" data-day="Wednesday" data-time="twelve o'clock" data-subject="Technology"><div class="tt-slot-badge">💻</div><div class="tt-slot-name">Technology</div></div></td>
+                            <td><div class="tt-slot" data-day="Thursday" data-time="twelve o'clock" data-subject="Italian"><div class="tt-slot-badge">✍️</div><div class="tt-slot-name">Italian</div></div></td>
+                            <td><div class="tt-slot" data-day="Friday" data-time="twelve o'clock" data-subject="Music"><div class="tt-slot-badge">🎵</div><div class="tt-slot-name">Music</div></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="font-size: 1.15rem; font-weight: bold; color: #4338ca; min-height: 2rem; margin-top: 8px;" id="timetableAudioFeedback">
+                Tocca qualsiasi casella per ascoltarne la frase completa! 🎧
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: SPEAKING LAB ==================== -->
+        <section class="game-panel" id="panel-speaking">
+            
+            <div class="sentence-builder-box">
+                <!-- Row 1: Preference -->
+                <div class="builder-row">
+                    <div class="builder-label">1. Choose your expression:</div>
+                    <div class="chips-container" id="grp-pref">
+                        <button class="chip-btn active" data-val="My favourite subject is">My favourite subject is</button>
+                        <button class="chip-btn" data-val="I love">I love</button>
+                        <button class="chip-btn" data-val="I like">I like</button>
+                        <button class="chip-btn" data-val="I don't like">I don't like</button>
+                    </div>
+                </div>
+
+                <!-- Row 2: Subject -->
+                <div class="builder-row">
+                    <div class="builder-label">2. Choose the subject:</div>
+                    <div class="chips-container" id="grp-subject">
+                        <button class="chip-btn active" data-val="English">English 🇬🇧</button>
+                        <button class="chip-btn" data-val="Maths">Maths 📐</button>
+                        <button class="chip-btn" data-val="Science">Science 🔬</button>
+                        <button class="chip-btn" data-val="History">History 🏛️</button>
+                        <button class="chip-btn" data-val="Geography">Geography 🌍</button>
+                        <button class="chip-btn" data-val="Art">Art 🎨</button>
+                        <button class="chip-btn" data-val="Music">Music 🎵</button>
+                        <button class="chip-btn" data-val="P.E.">P.E. ⚽</button>
+                        <button class="chip-btn" data-val="R.E.">R.E. ✝️</button>
+                        <button class="chip-btn" data-val="Technology">Technology 💻</button>
+                    </div>
+                </div>
+
+                <!-- Row 3: Reason -->
+                <div class="builder-row">
+                    <div class="builder-label">3. Give a reason (because it's...):</div>
+                    <div class="chips-container" id="grp-reason">
+                        <button class="chip-btn active" data-val="because it's interesting and fun!">because it's interesting and fun! ⭐</button>
+                        <button class="chip-btn" data-val="because I love creativity!">because I love creativity! 🎨</button>
+                        <button class="chip-btn" data-val="because I love doing experiments!">because I love doing experiments! 🧪</button>
+                        <button class="chip-btn" data-val="because we play exciting games!">because we play exciting games! 🏃‍♂️</button>
+                        <button class="chip-btn" data-val="because it is very important!">because it is very important! 💡</button>
+                        <button class="chip-btn" data-val="because it is a bit difficult!">because it is a bit difficult! 🤔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIVE PREVIEW CARD -->
+            <div class="sentence-preview-card">
+                <div class="sentence-preview-text" id="sentenceDisplay">
+                    "My favourite subject is English because it's interesting and fun!"
+                </div>
+                <div class="sentence-preview-it" id="sentenceItalianDisplay">
+                    (La mia materia preferita è inglese perché è interessante e divertente!)
+                </div>
+            </div>
+
+            <div class="speaking-actions">
+                <button class="btn-action green" id="btnSpeakSentence">
+                    🎤 Speak Aloud! (Ascolta la pronuncia)
+                </button>
+                <button class="btn-action" id="btnRandomSentence">
+                    🎲 Surprise Sentence!
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: GLOSSARY ==================== -->
+        <section class="game-panel" id="panel-vocab">
+            <div style="text-align: center; margin-bottom: 12px;">
+                <h2 style="margin: 0; color: #3730a3; font-size: clamp(1.2rem, 2vw, 1.6rem);">📖 School Subjects Glossary & Pronunciation</h2>
+                <span style="color: #64748b; font-size: 1rem;">Tocca una materia per ascoltare pronuncia ed esempio!</span>
+            </div>
+
+            <div class="vocab-grid">
+                
+                <div class="vocab-card" data-phrase="English. In English, we learn new words, read stories, and speak together.">
+                    <div class="vocab-badge">🇬🇧</div>
+                    <div>
+                        <div class="vocab-title">English</div>
+                        <div class="vocab-sub">Inglese • Reading & Speaking</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Maths. Mathematics. We do sums, fractions, geometry, and problem solving.">
+                    <div class="vocab-badge">📐</div>
+                    <div>
+                        <div class="vocab-title">Maths</div>
+                        <div class="vocab-sub">Matematica • Numbers & Geometry</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Science. We study living things, nature, the human body, and the solar system.">
+                    <div class="vocab-badge">🔬</div>
+                    <div>
+                        <div class="vocab-title">Science</div>
+                        <div class="vocab-sub">Scienze • Experiments & Nature</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="History. We discover ancient civilizations, Pharaohs, the Romans, and historical events.">
+                    <div class="vocab-badge">🏛️</div>
+                    <div>
+                        <div class="vocab-title">History</div>
+                        <div class="vocab-sub">Storia • Ancient times & Civiltà</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Geography. We explore maps, continents, rivers, oceans, and world countries.">
+                    <div class="vocab-badge">🌍</div>
+                    <div>
+                        <div class="vocab-title">Geography</div>
+                        <div class="vocab-sub">Geografia • Maps & Countries</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Art. We draw, paint, sculpt, and express our creativity with colours.">
+                    <div class="vocab-badge">🎨</div>
+                    <div>
+                        <div class="vocab-title">Art</div>
+                        <div class="vocab-sub">Arte e Immagine • Drawing & Colors</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Music. We sing songs, play instruments like the recorder, and listen to rhythms.">
+                    <div class="vocab-badge">🎵</div>
+                    <div>
+                        <div class="vocab-title">Music</div>
+                        <div class="vocab-sub">Musica • Songs & Instruments</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="P.E. Physical Education. We play sports, do gymnastics, run, and exercise.">
+                    <div class="vocab-badge">⚽</div>
+                    <div>
+                        <div class="vocab-title">P.E. (Physical Education)</div>
+                        <div class="vocab-sub">Educazione Fisica • Sports & Gym</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="R.E. Religious Education. We reflect on faith, peace, love, and Christian values.">
+                    <div class="vocab-badge">✝️</div>
+                    <div>
+                        <div class="vocab-title">R.E. (Religion)</div>
+                        <div class="vocab-sub">Religione • Values & Faith</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Italian. We read literature, study grammar, write essays, and improve our language.">
+                    <div class="vocab-badge">✍️</div>
+                    <div>
+                        <div class="vocab-title">Italian</div>
+                        <div class="vocab-sub">Italiano • Grammar & Literature</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Technology. We learn about computers, coding, tools, and digital media.">
+                    <div class="vocab-badge">💻</div>
+                    <div>
+                        <div class="vocab-title">Technology / ICT</div>
+                        <div class="vocab-sub">Tecnologia • Computers & Coding</div>
+                    </div>
+                </div>
+
+                <div class="vocab-card" data-phrase="Drama. We act, put on plays, and build our confidence on stage.">
+                    <div class="vocab-badge">🎭</div>
+                    <div>
+                        <div class="vocab-title">Drama</div>
+                        <div class="vocab-sub">Teatro • Acting & Expressiveness</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- WIN MODAL -->
+    <div class="modal-overlay" id="winModal">
+        <div class="modal-card">
+            <h2>🏆 SCHOOL SUBJECT MASTER! 🏆</h2>
+            <p id="winMsg">Fantastic job! You solved 8 riddles in a row! You are ready for Middle School!</p>
+            <div style="font-size: 3.5rem; margin-bottom: 15px;">🎓 📚 ⭐</div>
+            <button class="btn-action" id="btnModalPlayAgain" style="margin: 0 auto;">
+                ▶ Play Again!
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT GAME LOGIC -->
+    <script>
+        /* ==================== AUDIO SYNTHESIS (NO EXTERNAL FILES) ==================== */
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playTone(freq, type = 'sine', duration = 0.2, gainLevel = 0.2) {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(gainLevel, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) { console.warn(e); }
+        }
+
+        function playCorrectChime() {
+            if (!soundEnabled) return;
+            playTone(523.25, 'triangle', 0.12, 0.25); // C5
+            setTimeout(() => playTone(659.25, 'triangle', 0.12, 0.25), 90);  // E5
+            setTimeout(() => playTone(783.99, 'triangle', 0.25, 0.3), 180);  // G5
+        }
+
+        function playWrongTone() {
+            if (!soundEnabled) return;
+            playTone(240, 'sawtooth', 0.2, 0.15);
+            setTimeout(() => playTone(180, 'sawtooth', 0.25, 0.18), 110);
+        }
+
+        function playFanfare() {
+            if (!soundEnabled) return;
+            const melody = [523, 659, 783, 1046, 1318];
+            melody.forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.25, 0.3), i * 110));
+        }
+
+        function playPop() {
+            playTone(750, 'sine', 0.08, 0.15);
+        }
+
+        /* ==================== SPEECH SYNTHESIS ==================== */
+        function speakEnglish(text, onEnd) {
+            if (!soundEnabled) {
+                if (onEnd) onEnd();
+                return;
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.88; // Ideal natural pace for 5th graders
+                utterance.pitch = 1.05;
+
+                const voices = window.speechSynthesis.getVoices();
+                const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')));
+                if (enVoice) utterance.voice = enVoice;
+
+                if (onEnd) utterance.onend = onEnd;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Audio Toggle
+        const btnSoundToggle = document.getElementById('btnSoundToggle');
+        const soundIcon = document.getElementById('soundIcon');
+        btnSoundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+            btnSoundToggle.innerHTML = soundEnabled ? '<span>🔊</span> Audio ON' : '<span>🔇</span> Audio OFF';
+            if (!soundEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        });
+
+        /* ==================== CONFETTI EFFECT ==================== */
+        const confettiCanvas = document.getElementById('confettiCanvas');
+        const cctx = confettiCanvas.getContext('2d');
+        let confettiPieces = [];
+        let confettiTimer = null;
+
+        function resizeConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+        resizeConfetti();
+
+        function launchConfetti(count = 70) {
+            confettiPieces = [];
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ec4899', '#3b82f6'];
+            for (let i = 0; i < count; i++) {
+                confettiPieces.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * -confettiCanvas.height * 0.5,
+                    size: Math.random() * 12 + 6,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 4 + 3,
+                    speedX: (Math.random() - 0.5) * 4,
+                    rotation: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 8
+                });
+            }
+            if (!confettiTimer) animateConfetti();
+        }
+
+        function animateConfetti() {
+            cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            let active = false;
+            confettiPieces.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotSpeed;
+                if (p.y < confettiCanvas.height + 20) active = true;
+
+                cctx.save();
+                cctx.translate(p.x, p.y);
+                cctx.rotate((p.rotation * Math.PI) / 180);
+                cctx.fillStyle = p.color;
+                cctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                cctx.restore();
+            });
+
+            if (active) {
+                confettiTimer = requestAnimationFrame(animateConfetti);
+            } else {
+                cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                confettiTimer = null;
+            }
+        }
+
+        /* ==================== TABS SWITCHING ==================== */
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.game-panel');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                playPop();
+                const target = btn.dataset.tab;
+                tabBtns.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`panel-${target}`).classList.add('active');
+
+                if (target === 'detective') {
+                    loadNewQuizQuestion();
+                }
+            });
+        });
+
+        /* ==================== TAB 1: CLUE QUIZ LOGIC ==================== */
+        const quizDatabase = [
+            {
+                subject: 'Maths',
+                icon: '📐',
+                it: 'Matematica',
+                clue: 'In this subject, we solve equations, calculate numbers, use a ruler, and work with geometry and fractions!',
+                tools: 'Calculator, ruler, numbers'
+            },
+            {
+                subject: 'Science',
+                icon: '🔬',
+                it: 'Scienze',
+                clue: 'In this subject, we do experiments, study the human body, plants, animals, and the Solar System!',
+                tools: 'Microscope, test tubes, planets'
+            },
+            {
+                subject: 'History',
+                icon: '🏛️',
+                it: 'Storia',
+                clue: 'In this subject, we travel back in time to explore the ancient Egyptians, the Roman Empire, and great past events!',
+                tools: 'Timeline, pyramids, ancient scrolls'
+            },
+            {
+                subject: 'Geography',
+                icon: '🌍',
+                it: 'Geografia',
+                clue: 'In this subject, we study world maps, capitals, mountains, rivers, climates, and continents!',
+                tools: 'Atlas, globe, compass'
+            },
+            {
+                subject: 'English',
+                icon: '🇬🇧',
+                it: 'Inglese',
+                clue: 'In this subject, we practice speaking, learn irregular verbs, read British and American stories, and talk with friends!',
+                tools: 'Dictionary, dialogue, vocabulary'
+            },
+            {
+                subject: 'Art',
+                icon: '🎨',
+                it: 'Arte e Immagine',
+                clue: 'In this subject, we mix primary colours, paint portraits, sketch landscapes, and unleash our creativity!',
+                tools: 'Paintbrush, palette, sketchbook'
+            },
+            {
+                subject: 'Music',
+                icon: '🎵',
+                it: 'Musica',
+                clue: 'In this subject, we play instruments like the recorder, sing songs, read musical notes, and follow the rhythm!',
+                tools: 'Musical notes, recorder, songbook'
+            },
+            {
+                subject: 'P.E.',
+                icon: '⚽',
+                it: 'Educazione Fisica',
+                clue: 'In this subject, we go to the gym, wear sneakers, run, jump, play basketball, and stay active and healthy!',
+                tools: 'Ball, whistle, sports shoes'
+            },
+            {
+                subject: 'R.E.',
+                icon: '✝️',
+                it: 'Religione',
+                clue: 'In this subject, we discover religious stories, Christian values, peace, love, and respect for everybody!',
+                tools: 'Bible, peace dove, reflection'
+            },
+            {
+                subject: 'Italian',
+                icon: '✍️',
+                it: 'Italiano',
+                clue: 'In this subject, we write essays, study grammatical analysis, read classic literature, and learn spelling rules!',
+                tools: 'Notebook, novels, dictionary'
+            },
+            {
+                subject: 'Technology',
+                icon: '💻',
+                it: 'Tecnologia',
+                clue: 'In this subject, we explore computer circuits, learn coding basics, and study materials and inventions!',
+                tools: 'Computer, keyboard, robot'
+            }
+        ];
+
+        let quizScore = 0;
+        let quizStreak = 0;
+        let currentQuestion = null;
+        let quizPool = [];
+
+        function initQuizPool() {
+            quizPool = [...quizDatabase].sort(() => Math.random() - 0.5);
+        }
+
+        function loadNewQuizQuestion() {
+            if (quizPool.length === 0) initQuizPool();
+            currentQuestion = quizPool.pop();
+
+            document.getElementById('clueText').textContent = `"${currentQuestion.clue}"`;
+            speakEnglish(currentQuestion.clue);
+
+            // Pick 3 random wrong options
+            const otherSubjects = quizDatabase.filter(s => s.subject !== currentQuestion.subject);
+            otherSubjects.sort(() => Math.random() - 0.5);
+            const options = [currentQuestion, otherSubjects[0], otherSubjects[1], otherSubjects[2]];
+            options.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            options.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <div class="subject-icon">${opt.icon}</div>
+                    <div class="subject-info">
+                        <div class="subject-name">${opt.subject}</div>
+                        <div class="subject-sub">${opt.it}</div>
+                    </div>
+                `;
+                card.addEventListener('click', () => handleQuizAnswer(card, opt.subject));
+                grid.appendChild(card);
+            });
+        }
+
+        document.getElementById('clueBox').addEventListener('click', () => {
+            if (currentQuestion) speakEnglish(currentQuestion.clue);
+        });
+
+        const feedbackEl = document.getElementById('quizFeedback');
+        const scoreEl = document.getElementById('quizScore');
+        const streakEl = document.getElementById('quizStreak');
+
+        function handleQuizAnswer(card, selectedSubject) {
+            if (!currentQuestion) return;
+
+            if (selectedSubject === currentQuestion.subject) {
+                // Correct
+                playCorrectChime();
+                card.classList.add('correct-anim');
+                quizScore++;
+                quizStreak++;
+                scoreEl.textContent = quizScore;
+                streakEl.textContent = quizStreak;
+
+                feedbackEl.textContent = `🎉 EXCELLENT! YES! It's ${currentQuestion.subject}! 🎉`;
+                feedbackEl.style.color = '#059669';
+
+                speakEnglish(`Brilliant! The answer is ${currentQuestion.subject}!`);
+
+                if (quizScore >= 8) {
+                    launchConfetti(80);
+                    playFanfare();
+                    setTimeout(() => {
+                        showWinModal("🏆 SCHOOL SUBJECT MASTER! 🏆", `Incredible score! You mastered 8 subjects in a row! Excellent Grade 5 English!`);
+                    }, 800);
+                } else {
+                    setTimeout(loadNewQuizQuestion, 1400);
+                }
+            } else {
+                // Wrong
+                playWrongTone();
+                card.classList.add('wrong-anim');
+                setTimeout(() => card.classList.remove('wrong-anim'), 450);
+                quizStreak = 0;
+                streakEl.textContent = '0';
+
+                feedbackEl.textContent = `❌ Not ${selectedSubject}! Listen to the clue again and retry! ❌`;
+                feedbackEl.style.color = '#ef4444';
+
+                speakEnglish(`Oops! Not ${selectedSubject}. Try again!`);
+            }
+        }
+
+        /* ==================== TAB 2: TIMETABLE LOGIC ==================== */
+        document.querySelectorAll('.tt-slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                playPop();
+                const day = slot.dataset.day;
+                const time = slot.dataset.time;
+                const subject = slot.dataset.subject;
+
+                const phrase = `On ${day} at ${time}, I have ${subject}!`;
+                document.getElementById('timetableAudioFeedback').textContent = `🎧 "${phrase}"`;
+                speakEnglish(phrase);
+            });
+        });
+
+        /* ==================== TAB 3: SPEAKING LAB ==================== */
+        const sentenceState = {
+            pref: 'My favourite subject is',
+            subj: 'English',
+            reason: "because it's interesting and fun!"
+        };
+
+        const italianSubjectMap = {
+            'English': 'inglese',
+            'Maths': 'matematica',
+            'Science': 'scienze',
+            'History': 'storia',
+            'Geography': 'geografia',
+            'Art': 'arte',
+            'Music': 'musica',
+            'P.E.': 'educazione fisica',
+            'R.E.': 'religione',
+            'Technology': 'tecnologia'
+        };
+
+        function updateSentence() {
+            let fullEn = `${sentenceState.pref} ${sentenceState.subj} ${sentenceState.reason}`;
+            document.getElementById('sentenceDisplay').textContent = `"${fullEn}"`;
+
+            // Italian translation helper
+            let itPref = 'La mia materia preferita è';
+            if (sentenceState.pref === 'I love') itPref = 'Adoro';
+            if (sentenceState.pref === 'I like') itPref = 'Mi piace';
+            if (sentenceState.pref === "I don't like") itPref = 'Non mi piace';
+
+            let itSubj = italianSubjectMap[sentenceState.subj] || sentenceState.subj;
+            document.getElementById('sentenceItalianDisplay').textContent = `(${itPref} ${itSubj}...)`;
+        }
+
+        function setupChipGroup(containerId, stateKey) {
+            const container = document.getElementById(containerId);
+            container.querySelectorAll('.chip-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    container.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    sentenceState[stateKey] = btn.dataset.val;
+                    playTone(650, 'sine', 0.08, 0.2);
+                    updateSentence();
+                    speakEnglish(btn.dataset.val);
+                });
+            });
+        }
+
+        setupChipGroup('grp-pref', 'pref');
+        setupChipGroup('grp-subject', 'subj');
+        setupChipGroup('grp-reason', 'reason');
+
+        document.getElementById('btnSpeakSentence').addEventListener('click', () => {
+            const fullEn = `${sentenceState.pref} ${sentenceState.subj} ${sentenceState.reason}`;
+            speakEnglish(fullEn);
+            launchConfetti(35);
+        });
+
+        document.getElementById('btnRandomSentence').addEventListener('click', () => {
+            playTone(700, 'triangle', 0.15, 0.25);
+            const prefs = ['My favourite subject is', 'I love', 'I like'];
+            const subjs = ['English', 'Maths', 'Science', 'History', 'Geography', 'Art', 'Music', 'P.E.', 'R.E.', 'Technology'];
+            const reasons = [
+                "because it's interesting and fun!",
+                "because I love creativity!",
+                "because I love doing experiments!",
+                "because we play exciting games!",
+                "because it is very important!"
+            ];
+
+            sentenceState.pref = prefs[Math.floor(Math.random() * prefs.length)];
+            sentenceState.subj = subjs[Math.floor(Math.random() * subjs.length)];
+            sentenceState.reason = reasons[Math.floor(Math.random() * reasons.length)];
+
+            // Sync active
+            syncChipUI('grp-pref', sentenceState.pref);
+            syncChipUI('grp-subject', sentenceState.subj);
+            syncChipUI('grp-reason', sentenceState.reason);
+
+            updateSentence();
+            const fullEn = `${sentenceState.pref} ${sentenceState.subj} ${sentenceState.reason}`;
+            speakEnglish(fullEn);
+        });
+
+        function syncChipUI(containerId, value) {
+            document.querySelectorAll(`#${containerId} .chip-btn`).forEach(b => {
+                b.classList.toggle('active', b.dataset.val === value);
+            });
+        }
+
+        /* ==================== TAB 4: GLOSSARY ==================== */
+        document.querySelectorAll('.vocab-card').forEach(card => {
+            card.addEventListener('click', () => {
+                playPop();
+                const phrase = card.dataset.phrase;
+                speakEnglish(phrase);
+            });
+        });
+
+        /* ==================== MODAL & RESET ==================== */
+        const winModal = document.getElementById('winModal');
+        const btnModalPlayAgain = document.getElementById('btnModalPlayAgain');
+        function showWinModal(title, msg) {
+            winModal.querySelector('h2').textContent = title;
+            document.getElementById('winMsg').textContent = msg;
+            winModal.classList.add('show');
+        }
+
+        btnModalPlayAgain.addEventListener('click', () => {
+            winModal.classList.remove('show');
+            playPop();
+            quizScore = 0;
+            quizStreak = 0;
+            scoreEl.textContent = '0';
+            streakEl.textContent = '0';
+            initQuizPool();
+            loadNewQuizQuestion();
+        });
+
+        document.getElementById('btnResetQuiz').addEventListener('click', () => {
+            playPop();
+            quizScore = 0;
+            quizStreak = 0;
+            scoreEl.textContent = '0';
+            streakEl.textContent = '0';
+            initQuizPool();
+            loadNewQuizQuestion();
+        });
+
+        /* ==================== INIT ==================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            initQuizPool();
+            loadNewQuizQuestion();
+            updateSentence();
+        });
+    </script>
+</body>
+</html>

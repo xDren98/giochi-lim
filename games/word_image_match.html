@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎯 Word & Picture Match!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      background: linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 18px 20px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.6rem;
+      font-weight: 900;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      letter-spacing: 1px;
+    }
+
+    .instruction {
+      margin-top: 5px;
+      font-size: 1.25rem;
+      color: rgba(255,255,255,0.80);
+      min-height: 1.8em;
+      transition: all 0.25s ease;
+    }
+
+    /* ─── TOPIC BUTTONS ─── */
+    .topic-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .topic-btn {
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.85);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .topic-btn:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+    .topic-btn.active {
+      background: white;
+      color: #302b63;
+      border-color: white;
+      box-shadow: 0 4px 14px rgba(255,255,255,0.25);
+    }
+
+    /* ─── SCORE ROW ─── */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .score-badge {
+      background: rgba(255,255,255,0.13);
+      color: white;
+      padding: 9px 26px;
+      border-radius: 50px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid rgba(255,255,255,0.22);
+    }
+
+    .stars-display {
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      min-width: 10px;
+    }
+
+    /* ─── GAME GRID ─── */
+    .game-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      max-width: 1050px;
+      width: 100%;
+    }
+
+    .col-label {
+      text-align: center;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .cards-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ─── WORD CARD ─── */
+    .word-card {
+      height: 88px;
+      border-radius: 20px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #1a1a2e;
+      letter-spacing: 3px;
+      cursor: pointer;
+      border: 4px solid transparent;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s, color 0.3s, border-color 0.15s;
+      position: relative;
+    }
+
+    .word-card:not(.matched):not(.selected):hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+    }
+
+    .word-card:active:not(.matched) { transform: scale(0.96); }
+
+    .word-card.selected {
+      border-color: #FFD700;
+      background: #fffde0;
+      color: #333;
+      transform: translateY(-4px) scale(1.025);
+      animation: wPulse 1.3s ease-in-out infinite;
+    }
+
+    @keyframes wPulse {
+      0%,100% { box-shadow: 0 8px 24px rgba(255,215,0,0.45), 0 0 0 4px rgba(255,215,0,0.25); }
+      50%      { box-shadow: 0 8px 24px rgba(255,215,0,0.6),  0 0 0 9px rgba(255,215,0,0.10); }
+    }
+
+    .word-card.matched {
+      cursor: default;
+      color: white;
+      border-color: transparent;
+      animation: matchBounce 0.5s ease;
+    }
+
+    /* ─── IMAGE CARD ─── */
+    .img-card {
+      height: 88px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.10);
+      border: 3px solid rgba(255,255,255,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.4rem;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.25);
+      transition: transform 0.15s, background 0.3s, box-shadow 0.15s, border-color 0.3s;
+    }
+
+    .img-card:not(.matched):hover {
+      background: rgba(255,255,255,0.20);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    }
+
+    .img-card:active:not(.matched) { transform: scale(0.96); }
+
+    .img-card.matched {
+      cursor: default;
+      border-color: transparent;
+      animation: matchBounce 0.5s ease;
+    }
+
+    @keyframes matchBounce {
+      0%   { transform: scale(1); }
+      30%  { transform: scale(1.14); }
+      65%  { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+
+    /* ─── WRONG SHAKE ─── */
+    .wrong-shake {
+      animation: wrongShake 0.45s ease !important;
+    }
+
+    @keyframes wrongShake {
+      0%,100% { transform: translateX(0); }
+      15% { transform: translateX(-11px); }
+      30% { transform: translateX(11px); }
+      45% { transform: translateX(-8px); }
+      60% { transform: translateX(8px); }
+      75% { transform: translateX(-4px); }
+      90% { transform: translateX(4px); }
+    }
+
+    /* ─── WIN OVERLAY ─── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 3, 30, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 18px;
+    }
+    .overlay.show { display: flex; }
+
+    .overlay-emoji {
+      font-size: 5rem;
+      animation: popIn 0.55s ease both;
+    }
+
+    .overlay-title {
+      color: #FFD700;
+      font-size: 4rem;
+      font-weight: 900;
+      text-shadow: 0 4px 24px rgba(255,215,0,0.5);
+      animation: popIn 0.55s ease 0.1s both;
+      letter-spacing: 2px;
+    }
+
+    .overlay-sub {
+      color: rgba(255,255,255,0.85);
+      font-size: 1.5rem;
+      font-weight: 700;
+      animation: popIn 0.55s ease 0.2s both;
+    }
+
+    .play-again-btn {
+      background: linear-gradient(135deg, #FF6B6B, #ee0979);
+      color: white;
+      border: none;
+      border-radius: 28px;
+      padding: 24px 64px;
+      font-family: inherit;
+      font-size: 2.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 36px rgba(238,9,121,0.55);
+      transition: all 0.2s;
+      animation: popIn 0.55s ease 0.3s both;
+      letter-spacing: 1px;
+    }
+
+    .play-again-btn:hover {
+      transform: translateY(-6px) scale(1.06);
+      box-shadow: 0 20px 50px rgba(238,9,121,0.65);
+    }
+
+    .play-again-btn:active { transform: scale(0.97); }
+
+    @keyframes popIn {
+      0%   { transform: scale(0.4); opacity: 0; }
+      70%  { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ─── CONFETTI ─── */
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 60;
+      overflow: hidden;
+    }
+
+    .c {
+      position: absolute;
+      top: -20px;
+      animation: cFall linear forwards;
+    }
+
+    @keyframes cFall {
+      to { transform: translateY(110vh) rotate(800deg); opacity: 0; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .word-card  { height: 70px; font-size: 1.5rem; letter-spacing: 2px; }
+      .img-card   { height: 70px; font-size: 2.6rem; }
+      .game-area  { gap: 12px; }
+      .play-again-btn { font-size: 1.5rem; padding: 18px 40px; }
+      .overlay-title  { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="../index.html" class="btn-home" style="
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.4);
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+  ">🏠 Menu Giochi</a>
+
+  <!-- ═══════ HEADER ═══════ -->
+  <div class="header">
+    <h1>🎯 Word &amp; Picture Match!</h1>
+    <div class="instruction" id="instruction">
+      👆 Touch a <strong>WORD</strong>, then touch its <strong>PICTURE</strong>!
+    </div>
+  </div>
+
+  <!-- ═══════ TOPIC CHOOSER ═══════ -->
+  <div class="topic-row" id="topicRow"></div>
+
+  <!-- ═══════ SCORE ═══════ -->
+  <div class="score-row">
+    <div class="score-badge">✅ &nbsp;<span id="matchCount">0</span> / 6</div>
+    <div class="stars-display" id="starsDisplay"></div>
+  </div>
+
+  <!-- ═══════ GAME AREA ═══════ -->
+  <div class="game-area">
+    <div>
+      <div class="col-label">📝 Words</div>
+      <div class="cards-col" id="wordsCol"></div>
+    </div>
+    <div>
+      <div class="col-label">🖼️ Pictures</div>
+      <div class="cards-col" id="imgsCol"></div>
+    </div>
+  </div>
+
+  <!-- ═══════ WIN OVERLAY ═══════ -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-emoji">🏆</div>
+    <div class="overlay-title">AMAZING!</div>
+    <div class="overlay-sub" id="overlayMsg">All 6 pairs matched! Great work! 🌟</div>
+    <button class="play-again-btn" id="playAgainBtn">🔄 &nbsp;Play Again!</button>
+  </div>
+
+  <!-- Confetti canvas -->
+  <div class="confetti-layer" id="confettiLayer"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  VOCABULARY POOL  ─  10 pairs per topic (6 chosen per game)
+// ════════════════════════════════════════════════════════════
+const TOPICS = {
+  '📅 Days': [
+    { word:'MONDAY',    emoji:'🌙' },
+    { word:'TUESDAY',   emoji:'🌟' },
+    { word:'WEDNESDAY', emoji:'🌈' },
+    { word:'THURSDAY',  emoji:'⚡' },
+    { word:'FRIDAY',    emoji:'🎉' },
+    { word:'SATURDAY',  emoji:'🏖️' },
+    { word:'SUNDAY',    emoji:'☀️' },
+  ],
+  '🫁 Body Parts': [
+    { word:'EYES',    emoji:'👀' },
+    { word:'NOSE',    emoji:'👃' },
+    { word:'MOUTH',   emoji:'👄' },
+    { word:'EAR',     emoji:'👂' },
+    { word:'HAND',    emoji:'🤚' },
+    { word:'FOOT',    emoji:'🦶' },
+    { word:'LEG',     emoji:'🦵' },
+    { word:'ARM',     emoji:'💪' },
+    { word:'TEETH',   emoji:'🦷' },
+    { word:'TONGUE',  emoji:'👅' },
+  ],
+  '🐾 Animals': [
+    { word:'DOG',    emoji:'🐶' },
+    { word:'CAT',    emoji:'🐱' },
+    { word:'BIRD',   emoji:'🐦' },
+    { word:'FISH',   emoji:'🐟' },
+    { word:'RABBIT', emoji:'🐰' },
+    { word:'HORSE',  emoji:'🐴' },
+    { word:'COW',    emoji:'🐮' },
+    { word:'FROG',   emoji:'🐸' },
+    { word:'LION',   emoji:'🦁' },
+    { word:'MONKEY', emoji:'🐵' },
+  ],
+  '🍕 Food': [
+    { word:'APPLE',    emoji:'🍎' },
+    { word:'PIZZA',    emoji:'🍕' },
+    { word:'CAKE',     emoji:'🎂' },
+    { word:'ICE CREAM',emoji:'🍦' },
+    { word:'BANANA',   emoji:'🍌' },
+    { word:'BURGER',   emoji:'🍔' },
+    { word:'COOKIE',   emoji:'🍪' },
+    { word:'GRAPES',   emoji:'🍇' },
+    { word:'CARROT',   emoji:'🥕' },
+    { word:'SANDWICH', emoji:'🥪' },
+  ],
+  '📚 School': [
+    { word:'BOOK',     emoji:'📚' },
+    { word:'PEN',      emoji:'🖊️' },
+    { word:'BAG',      emoji:'🎒' },
+    { word:'RULER',    emoji:'📏' },
+    { word:'PENCIL',   emoji:'✏️' },
+    { word:'SCISSORS', emoji:'✂️' },
+    { word:'CLOCK',    emoji:'🕐' },
+    { word:'GLOBE',    emoji:'🌍' },
+    { word:'BOARD',    emoji:'📋' },
+    { word:'DESK',     emoji:'🪑' },
+  ],
+  '👕 Clothes': [
+    { word:'HAT',    emoji:'🎩' },
+    { word:'SHOES',  emoji:'👟' },
+    { word:'SHIRT',  emoji:'👕' },
+    { word:'DRESS',  emoji:'👗' },
+    { word:'SOCKS',  emoji:'🧦' },
+    { word:'SCARF',  emoji:'🧣' },
+    { word:'GLOVES', emoji:'🧤' },
+    { word:'CAP',    emoji:'🧢' },
+    { word:'BOOTS',  emoji:'👢' },
+    { word:'JEANS',  emoji:'👖' },
+  ],
+};
+
+// A set of vivid colours — one per matched pair
+const PAIR_COLORS = [
+  '#e03131', // red
+  '#d6820a', // orange
+  '#2a9e44', // green
+  '#1864c5', // blue
+  '#7048e8', // purple
+  '#c2255c', // pink
+];
+
+const CONFETTI_COLORS = [
+  '#FF6B6B','#FFA94D','#FFD43B','#69DB7C','#4DABF7','#9775FA','#F783AC','#fff'
+];
+
+// ════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════
+let selectedWord = null;   // { el: Element, word: string }
+let matchedCount  = 0;
+let currentTopic  = '📅 Days';
+let busy          = false; // debounce flag during animations
+
+// ════════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function setInstruction(html) {
+  document.getElementById('instruction').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════
+//  TOPIC BUTTONS
+// ════════════════════════════════════════════════════════════
+(function buildTopicButtons() {
+  const row = document.getElementById('topicRow');
+  Object.keys(TOPICS).forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
+    btn.textContent = t;
+    btn.onclick = () => {
+      currentTopic = t;
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      newGame();
+    };
+    row.appendChild(btn);
+  });
+})();
+
+// ════════════════════════════════════════════════════════════
+//  NEW GAME
+// ════════════════════════════════════════════════════════════
+function newGame() {
+  selectedWord = null;
+  matchedCount = 0;
+  busy         = false;
+
+  document.getElementById('matchCount').textContent = '0';
+  document.getElementById('starsDisplay').textContent = '';
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('confettiLayer').innerHTML = '';
+  setInstruction('👆 Touch a <strong>WORD</strong>, then touch its <strong>PICTURE</strong>!');
+
+  // Pick 6 pairs randomly from the current topic pool
+  const pool   = TOPICS[currentTopic];
+  const picked = shuffle(pool).slice(0, 6);
+
+  // Assign a unique colour to each pair
+  const pairs = picked.map((p, i) => ({ ...p, color: PAIR_COLORS[i] }));
+
+  // Shuffle words and images INDEPENDENTLY
+  const wordOrder = shuffle(pairs);
+  const imgOrder  = shuffle(pairs);
+
+  // ── RENDER WORDS ──
+  const wordsCol = document.getElementById('wordsCol');
+  wordsCol.innerHTML = '';
+  wordOrder.forEach(pair => {
+    const card = document.createElement('div');
+    card.className     = 'word-card';
+    card.dataset.word  = pair.word;
+    card.dataset.color = pair.color;
+    card.textContent   = pair.word;
+    card.onclick       = () => onWordClick(card);
+    wordsCol.appendChild(card);
+  });
+
+  // ── RENDER IMAGES ──
+  const imgsCol = document.getElementById('imgsCol');
+  imgsCol.innerHTML = '';
+  imgOrder.forEach(pair => {
+    const card = document.createElement('div');
+    card.className     = 'img-card';
+    card.dataset.word  = pair.word;
+    card.dataset.color = pair.color;
+    card.textContent   = pair.emoji;
+    card.onclick       = () => onImgClick(card);
+    imgsCol.appendChild(card);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  CLICK: WORD CARD
+// ════════════════════════════════════════════════════════════
+function onWordClick(card) {
+  if (card.classList.contains('matched') || busy) return;
+
+  // Deselect any existing selection
+  document.querySelectorAll('.word-card.selected')
+          .forEach(c => c.classList.remove('selected'));
+
+  // Toggle off if same card tapped again
+  if (selectedWord && selectedWord.el === card) {
+    selectedWord = null;
+    setInstruction('👆 Touch a <strong>WORD</strong>, then touch its <strong>PICTURE</strong>!');
+    return;
+  }
+
+  // Select this card
+  card.classList.add('selected');
+  selectedWord = { el: card, word: card.dataset.word };
+  setInstruction(`💡 Now find the picture for <strong>${card.dataset.word}</strong>!`);
+}
+
+// ════════════════════════════════════════════════════════════
+//  CLICK: IMAGE CARD
+// ════════════════════════════════════════════════════════════
+function onImgClick(card) {
+  if (card.classList.contains('matched') || busy) return;
+
+  // No word selected yet
+  if (!selectedWord) {
+    card.classList.add('wrong-shake');
+    setTimeout(() => card.classList.remove('wrong-shake'), 500);
+    setInstruction('⬅️ First touch a <strong>WORD</strong> on the left!');
+    setTimeout(() =>
+      setInstruction('👆 Touch a <strong>WORD</strong>, then touch its <strong>PICTURE</strong>!'), 1500);
+    return;
+  }
+
+  // ── CORRECT MATCH ──────────────────────────────────────────
+  if (selectedWord.word === card.dataset.word) {
+    busy = true;
+    const color = card.dataset.color;
+
+    // Style WORD card as matched
+    const wc = selectedWord.el;
+    wc.classList.remove('selected');
+    wc.classList.add('matched');
+    wc.style.background   = color;
+    wc.style.borderColor  = 'transparent';
+
+    // Style IMAGE card as matched
+    card.classList.add('matched');
+    card.style.background  = color;
+    card.style.borderColor = 'transparent';
+
+    selectedWord = null;
+    matchedCount++;
+    document.getElementById('matchCount').textContent = matchedCount;
+    document.getElementById('starsDisplay').textContent = '⭐'.repeat(matchedCount);
+
+    if (matchedCount < 6) {
+      setInstruction(`🎉 Great! ${6 - matchedCount} more pair${6 - matchedCount > 1 ? 's' : ''} to go!`);
+      setTimeout(() => { busy = false; }, 450);
+    } else {
+      setInstruction('🏆 All matched! AMAZING!');
+      setTimeout(() => { busy = false; showWin(); }, 550);
+    }
+
+  // ── WRONG MATCH ────────────────────────────────────────────
+  } else {
+    busy = true;
+    card.classList.add('wrong-shake');
+    setInstruction(`❌ Oops! Try another picture for <strong>${selectedWord.word}</strong>!`);
+
+    setTimeout(() => {
+      card.classList.remove('wrong-shake');
+      busy = false;
+      if (selectedWord) {
+        setInstruction(`💡 Find the picture for <strong>${selectedWord.word}</strong>!`);
+      }
+    }, 500);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  WIN SCREEN
+// ════════════════════════════════════════════════════════════
+function showWin() {
+  document.getElementById('overlayMsg').textContent =
+    'All 6 pairs matched! Great work! 🌟';
+  document.getElementById('overlay').classList.add('show');
+  launchConfetti();
+}
+
+// ════════════════════════════════════════════════════════════
+//  CONFETTI
+// ════════════════════════════════════════════════════════════
+function launchConfetti() {
+  const layer = document.getElementById('confettiLayer');
+  layer.innerHTML = '';
+  for (let i = 0; i < 110; i++) {
+    const el   = document.createElement('div');
+    el.className = 'c';
+    const size   = 7 + Math.random() * 13;
+    const isCircle = Math.random() > 0.5;
+    el.style.left             = Math.random() * 100 + 'vw';
+    el.style.width            = size + 'px';
+    el.style.height           = size + 'px';
+    el.style.background       = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    el.style.borderRadius     = isCircle ? '50%' : '3px';
+    el.style.animationDuration= (1.4 + Math.random() * 2.2) + 's';
+    el.style.animationDelay   = (Math.random() * 1.2) + 's';
+    layer.appendChild(el);
+  }
+  setTimeout(() => { layer.innerHTML = ''; }, 6000);
+}
+
+// ════════════════════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════════════════════
+document.getElementById('playAgainBtn').onclick = newGame;
+newGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Days of the Week 🌟</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+    :root {
+      --mon: #FF6B6B; --tue: #FFA94D; --wed: #FFD43B;
+      --thu: #69DB7C; --fri: #4DABF7; --sat: #9775FA; --sun: #F783AC;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.4rem;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.85);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* ── Tab Navigation ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      transition: all 0.25s;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: white;
+      color: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 760px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── Score badge ── */
+    .score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .score-badge {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .progress-bar {
+      flex: 1;
+      min-width: 160px;
+      height: 14px;
+      background: #eee;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #69DB7C, #4DABF7);
+      border-radius: 50px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Flashcards ── */
+    .flashcard-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .flashcard-scene {
+      width: 300px;
+      height: 200px;
+      perspective: 800px;
+      cursor: pointer;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .flashcard.flipped { transform: rotateY(180deg); }
+
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .flashcard-front {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .flashcard-back {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      transform: rotateY(180deg);
+      border: 3px solid #dee2e6;
+    }
+
+    .flashcard-day {
+      font-size: 2rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    }
+
+    .flashcard-emoji {
+      font-size: 3rem;
+    }
+
+    .flashcard-hint {
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .flashcard-info {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #555;
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .fc-nav {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      font-weight: 900;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: #764ba2; transform: scale(1.1); }
+
+    .fc-counter {
+      font-weight: 700;
+      color: #888;
+      font-size: 1rem;
+    }
+
+    /* ── Day strips (reference) ── */
+    .day-strips {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day-strip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+    }
+
+    .day-strip .num  { font-size: 1.5rem; min-width: 36px; text-align: center; }
+    .day-strip .name { flex: 1; font-size: 1.3rem; }
+    .day-strip .ita  { font-size: 0.95rem; opacity: 0.85; }
+
+    /* ── Quiz ── */
+    .question-label {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .question-emoji {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .option-btn {
+      padding: 16px;
+      border: 3px solid #dee2e6;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s;
+      color: #333;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #667eea;
+      background: #f0f0ff;
+      transform: translateY(-2px);
+    }
+
+    .option-btn.correct { background: #d3f9d8; border-color: #69DB7C; color: #2b8a3e; }
+    .option-btn.wrong   { background: #ffe3e3; border-color: #FF6B6B; color: #c92a2a; }
+    .option-btn:disabled { cursor: default; }
+
+    .feedback {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin-top: 18px;
+      min-height: 36px;
+      transition: all 0.3s;
+    }
+
+    .action-btn {
+      display: block;
+      margin: 18px auto 0;
+      padding: 13px 36px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 14px rgba(102,126,234,0.4);
+    }
+
+    .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+
+    /* ── Order Game ── */
+    .order-instructions {
+      text-align: center;
+      color: #888;
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+
+    .order-pool, .order-answer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      min-height: 60px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 2.5px dashed #dee2e6;
+      margin-bottom: 14px;
+    }
+
+    .order-answer { background: #f8f9ff; border-color: #667eea; }
+
+    .day-chip {
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      color: white;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .day-chip:hover { transform: translateY(-2px) scale(1.05); }
+
+    .order-result {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 900;
+      min-height: 30px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Match Game ── */
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .match-grid { grid-template-columns: repeat(3, 1fr); }
+      .options-grid { grid-template-columns: 1fr; }
+    }
+
+    .match-card {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      border: 3px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      cursor: pointer;
+      background: #f8f9fa;
+      transition: all 0.25s;
+      padding: 6px;
+      color: #333;
+      line-height: 1.2;
+    }
+
+    .match-card:hover:not(.matched):not(.revealed) {
+      border-color: #667eea;
+      background: #f0f0ff;
+      transform: scale(1.05);
+    }
+
+    .match-card.selected {
+      border-color: #667eea;
+      background: #e8e8ff;
+      transform: scale(1.07);
+    }
+
+    .match-card.matched {
+      color: white;
+      border-color: transparent;
+      cursor: default;
+      animation: matchPop 0.4s ease;
+    }
+
+    .match-card.wrong-shake {
+      animation: shake 0.4s ease;
+      border-color: #FF6B6B;
+      background: #ffe3e3;
+    }
+
+    @keyframes matchPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .match-result {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-top: 14px;
+      min-height: 30px;
+    }
+
+    /* ── Results / Stars ── */
+    .result-screen {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .stars {
+      font-size: 3rem;
+      letter-spacing: 6px;
+      margin: 14px 0;
+    }
+
+    .result-msg {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .result-score {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #667eea;
+    }
+
+    /* ── Confetti ── */
+    .confetti-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh)  rotate(720deg); opacity: 0; }
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #555;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="../index.html" class="btn-home" style="
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: rgba(255,255,255,0.92);
+    color: #764ba2;
+    border: 2px solid #ffffff;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+  ">🏠 Menu Giochi</a>
+
+  <h1>📅 Days of the Week</h1>
+  <p class="subtitle">🎓 English – Class 3</p>
+
+  <!-- Tab Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('learn')">📖 Learn</button>
+    <button class="tab-btn" onclick="showSection('flashcards')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="showSection('quiz')">❓ Quiz</button>
+    <button class="tab-btn" onclick="showSection('order')">🔢 Order</button>
+    <button class="tab-btn" onclick="showSection('match')">🧩 Match</button>
+  </div>
+
+  <div class="card">
+
+    <!-- ══════════════════ LEARN ══════════════════ -->
+    <div class="section active" id="learn">
+      <div class="section-title">📚 The 7 Days of the Week</div>
+      <div class="day-strips" id="dayStrips"></div>
+      <p style="text-align:center;color:#aaa;font-size:0.9rem;margin-top:18px;">
+        🗣️ The week starts on <strong>Monday</strong> in the UK &amp; most of Europe!
+      </p>
+    </div>
+
+    <!-- ══════════════════ FLASHCARDS ══════════════════ -->
+    <div class="section" id="flashcards">
+      <div class="section-title">🃏 Flip the card to learn!</div>
+      <div class="flashcard-wrap">
+        <div class="flashcard-scene" onclick="flipCard()">
+          <div class="flashcard" id="fc">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-emoji" id="fc-emoji"></div>
+              <div class="flashcard-day" id="fc-day"></div>
+              <div class="flashcard-hint" style="color:rgba(255,255,255,0.7)">👆 Tap to flip!</div>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-emoji" id="fc-emoji2"></div>
+              <div class="flashcard-info" id="fc-info"></div>
+            </div>
+          </div>
+        </div>
+        <div class="fc-nav">
+          <button class="nav-btn" onclick="prevCard()">‹</button>
+          <span class="fc-counter" id="fc-counter">1 / 7</span>
+          <button class="nav-btn" onclick="nextCard()">›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ QUIZ ══════════════════ -->
+    <div class="section" id="quiz">
+      <div class="score-bar">
+        <div class="score-badge">⭐ <span id="q-score">0</span> pts</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="q-progress" style="width:0%"></div>
+        </div>
+        <span style="color:#aaa;font-size:0.9rem" id="q-counter">0 / 14</span>
+      </div>
+      <div id="quiz-area"></div>
+    </div>
+
+    <!-- ══════════════════ ORDER ══════════════════ -->
+    <div class="section" id="order">
+      <div class="section-title">🔢 Put the days in order!</div>
+      <p class="order-instructions">Click a day to add it → then click it again to remove it</p>
+      <div class="order-answer" id="order-answer">
+        <span style="color:#ccc;font-size:0.95rem;align-self:center">Your answer goes here…</span>
+      </div>
+      <div class="order-pool" id="order-pool"></div>
+      <div class="order-result" id="order-result"></div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="action-btn" onclick="checkOrder()">✅ Check</button>
+        <button class="action-btn" style="background:linear-gradient(135deg,#aaa,#777)" onclick="resetOrder()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════ MATCH ══════════════════ -->
+    <div class="section" id="match">
+      <div class="section-title">🧩 Match the day with Italian!</div>
+      <div class="score-bar">
+        <div class="score-badge">🧩 <span id="m-score">0</span> / 7</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="m-progress" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="match-grid" id="matchGrid"></div>
+      <div class="match-result" id="match-result"></div>
+      <button class="action-btn" onclick="initMatch()" style="margin-top:10px">🔄 New Game</button>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confetti"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════
+const DAYS = [
+  { name:"Monday",    abbr:"MON", ita:"Lunedì",    emoji:"🌙", color:"var(--mon)", num:1,
+    fun:"Monday comes from 'Moon's day' 🌙" },
+  { name:"Tuesday",   abbr:"TUE", ita:"Martedì",   emoji:"🔴", color:"var(--tue)", num:2,
+    fun:"Tuesday comes from Tiw, the god of war ⚔️" },
+  { name:"Wednesday", abbr:"WED", ita:"Mercoledì", emoji:"🌊", color:"var(--wed)", num:3,
+    fun:"Wednesday comes from Woden, king of gods 👑" },
+  { name:"Thursday",  abbr:"THU", ita:"Giovedì",   emoji:"⚡", color:"var(--thu)", num:4,
+    fun:"Thursday = Thor's day! The thunder god ⚡" },
+  { name:"Friday",    abbr:"FRI", ita:"Venerdì",   emoji:"🌟", color:"var(--fri)", num:5,
+    fun:"Friday comes from Frigg, goddess of love 💙" },
+  { name:"Saturday",  abbr:"SAT", ita:"Sabato",    emoji:"🪐", color:"var(--sat)", num:6,
+    fun:"Saturday = Saturn's day, a Roman god 🪐" },
+  { name:"Sunday",    abbr:"SUN", ita:"Domenica",  emoji:"☀️", color:"var(--sun)", num:7,
+    fun:"Sunday = Sun's day! Shine bright ☀️" }
+];
+
+// ═══════════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'quiz')   initQuiz();
+  if (id === 'order')  initOrder();
+  if (id === 'match')  initMatch();
+  if (id === 'flashcards') renderFlashcard();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LEARN
+// ═══════════════════════════════════════════════════════════
+(function buildLearn() {
+  const container = document.getElementById('dayStrips');
+  DAYS.forEach(d => {
+    const strip = document.createElement('div');
+    strip.className = 'day-strip';
+    strip.style.background = `linear-gradient(135deg, ${d.color}, ${d.color}cc)`;
+    strip.innerHTML = `
+      <span class="num">${d.emoji}</span>
+      <span class="name">${d.name}</span>
+      <span class="ita">${d.ita}</span>
+    `;
+    container.appendChild(strip);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════
+//  FLASHCARDS
+// ═══════════════════════════════════════════════════════════
+let fcIndex = 0;
+let fcFlipped = false;
+
+function renderFlashcard() {
+  fcFlipped = false;
+  document.getElementById('fc').classList.remove('flipped');
+  const d = DAYS[fcIndex];
+  document.getElementById('fc-emoji').textContent  = d.emoji;
+  document.getElementById('fc-emoji2').textContent = d.emoji;
+  document.getElementById('fc-day').textContent    = d.name;
+  document.getElementById('fc-info').innerHTML =
+    `<strong>${d.ita}</strong><br><small style="color:#888;font-size:0.85rem">${d.fun}</small>`;
+  document.getElementById('fc-counter').textContent = `${fcIndex+1} / ${DAYS.length}`;
+  const front = document.querySelector('.flashcard-front');
+  front.style.background = `linear-gradient(135deg, ${DAYS[fcIndex].color}, ${DAYS[fcIndex].color}cc)`;
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc').classList.toggle('flipped', fcFlipped);
+}
+
+function nextCard() { fcIndex = (fcIndex + 1) % DAYS.length; renderFlashcard(); }
+function prevCard() { fcIndex = (fcIndex - 1 + DAYS.length) % DAYS.length; renderFlashcard(); }
+
+// ═══════════════════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════════════════
+let quizQuestions = [], quizIdx = 0, quizScore = 0, quizAnswered = false;
+
+const QUIZ_TYPES = [
+  q => ({ prompt:`What is the ${ordinal(q.num)} day of the week?`, emoji: q.emoji, correct: q.name }),
+  q => ({ prompt:`How do you say "${q.ita}" in English?`, emoji: q.emoji, correct: q.name }),
+  q => ({ prompt:`What comes after ${DAYS[(q.num-2+6)%7].name}?`, emoji:'📅', correct: q.name }),
+  q => ({ prompt:`Which day has this emoji?`, emoji: q.emoji, correct: q.name }),
+  q => ({ prompt:`Which day comes before ${DAYS[q.num%7].name}?`, emoji:'📅', correct: q.name }),
+  q => ({ prompt:`Find the day: "${q.abbr}"`, emoji:'🔤', correct: q.name }),
+];
+
+function ordinal(n) {
+  const s=['st','nd','rd']; return n+(s[n-1]||'th');
+}
+
+function shuffle(arr) { return arr.sort(()=>Math.random()-0.5); }
+
+function buildQuizQuestions() {
+  const qs = [];
+  DAYS.forEach(d => {
+    const type = QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)];
+    const q = type(d);
+    // 3 wrong options
+    const others = shuffle(DAYS.filter(x => x.name !== d.name)).slice(0,3).map(x=>x.name);
+    q.options = shuffle([q.correct, ...others]);
+    qs.push(q);
+  });
+  // Add 7 more (mix)
+  DAYS.forEach(d => {
+    const type = QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)];
+    const q = type(d);
+    const others = shuffle(DAYS.filter(x => x.name !== d.name)).slice(0,3).map(x=>x.name);
+    q.options = shuffle([q.correct, ...others]);
+    qs.push(q);
+  });
+  return shuffle(qs);
+}
+
+function initQuiz() {
+  quizQuestions = buildQuizQuestions();
+  quizIdx = 0; quizScore = 0;
+  updateScoreUI();
+  renderQuestion();
+}
+
+function updateScoreUI() {
+  document.getElementById('q-score').textContent = quizScore;
+  document.getElementById('q-counter').textContent = `${quizIdx} / ${quizQuestions.length}`;
+  document.getElementById('q-progress').style.width = `${(quizIdx / quizQuestions.length)*100}%`;
+}
+
+function renderQuestion() {
+  const area = document.getElementById('quiz-area');
+  if (quizIdx >= quizQuestions.length) {
+    // Results
+    const pct = Math.round((quizScore / quizQuestions.length)*100);
+    const stars = pct>=80 ? '⭐⭐⭐' : pct>=50 ? '⭐⭐' : '⭐';
+    const msg = pct>=80 ? '🎉 Excellent! You\'re a star!' : pct>=50 ? '👍 Good job! Keep practising!' : '📚 Keep studying, you can do it!';
+    area.innerHTML = `
+      <div class="result-screen">
+        <div class="stars">${stars}</div>
+        <div class="result-score">${quizScore} / ${quizQuestions.length}</div>
+        <div class="result-msg">${msg}</div>
+        <button class="action-btn" onclick="initQuiz()">🔄 Play Again</button>
+      </div>`;
+    if (pct >= 80) launchConfetti();
+    return;
+  }
+
+  quizAnswered = false;
+  const q = quizQuestions[quizIdx];
+  area.innerHTML = `
+    <div class="question-emoji">${q.emoji}</div>
+    <div class="question-label">${q.prompt}</div>
+    <div class="options-grid" id="opts"></div>
+    <div class="feedback" id="fb"></div>
+    <button class="action-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Next ➡️</button>
+  `;
+  const grid = document.getElementById('opts');
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(btn, opt, q.correct);
+    grid.appendChild(btn);
+  });
+  updateScoreUI();
+}
+
+function checkAnswer(btn, chosen, correct) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const fb = document.getElementById('fb');
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    quizScore++;
+    fb.textContent = randomOf(['🎉 Correct!','✅ Well done!','⭐ Amazing!','👏 Brilliant!']);
+    fb.style.color = '#2b8a3e';
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = `❌ It was: ${correct}`;
+    fb.style.color = '#c92a2a';
+  }
+  quizIdx++;
+  updateScoreUI();
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() { renderQuestion(); }
+
+function randomOf(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+// ═══════════════════════════════════════════════════════════
+//  ORDER
+// ═══════════════════════════════════════════════════════════
+let orderAnswer = [];
+
+function initOrder() {
+  orderAnswer = [];
+  renderOrder();
+}
+
+function renderOrder() {
+  const pool = document.getElementById('order-pool');
+  const ans  = document.getElementById('order-answer');
+  document.getElementById('order-result').textContent = '';
+
+  // Pool: days not yet chosen
+  const remaining = DAYS.filter(d => !orderAnswer.includes(d.name));
+  pool.innerHTML = '';
+  if (remaining.length === 0) {
+    pool.innerHTML = '<span style="color:#ccc;font-size:0.9rem;align-self:center">All days placed! 👆</span>';
+  }
+  shuffle([...remaining]).forEach(d => {
+    const chip = document.createElement('div');
+    chip.className = 'day-chip';
+    chip.style.background = d.color;
+    chip.textContent = d.name;
+    chip.onclick = () => {
+      orderAnswer.push(d.name);
+      renderOrder();
+    };
+    pool.appendChild(chip);
+  });
+
+  // Answer area
+  ans.innerHTML = '';
+  if (orderAnswer.length === 0) {
+    ans.innerHTML = '<span style="color:#ccc;font-size:0.95rem;align-self:center">Your answer goes here…</span>';
+  }
+  orderAnswer.forEach((name, i) => {
+    const d = DAYS.find(x => x.name === name);
+    const chip = document.createElement('div');
+    chip.className = 'day-chip';
+    chip.style.background = d.color;
+    chip.innerHTML = `${i+1}. ${name}`;
+    chip.title = 'Click to remove';
+    chip.onclick = () => {
+      orderAnswer = orderAnswer.filter(x => x !== name);
+      renderOrder();
+    };
+    ans.appendChild(chip);
+  });
+}
+
+function checkOrder() {
+  if (orderAnswer.length < 7) {
+    document.getElementById('order-result').innerHTML =
+      `<span style="color:#FA5252">⚠️ Place all 7 days first!</span>`;
+    return;
+  }
+  const correct = DAYS.map(d => d.name);
+  const isCorrect = orderAnswer.every((n, i) => n === correct[i]);
+  const res = document.getElementById('order-result');
+  if (isCorrect) {
+    res.innerHTML = `<span style="color:#2b8a3e">🎉 Perfect order! Well done!</span>`;
+    launchConfetti();
+  } else {
+    res.innerHTML = `<span style="color:#c92a2a">❌ Not quite! Try again 💪</span>`;
+  }
+}
+
+function resetOrder() { initOrder(); }
+
+// ═══════════════════════════════════════════════════════════
+//  MATCH
+// ═══════════════════════════════════════════════════════════
+let matchSelected = null, matchMatched = 0;
+
+function initMatch() {
+  matchSelected = null; matchMatched = 0;
+  document.getElementById('m-score').textContent = '0';
+  document.getElementById('m-progress').style.width = '0%';
+  document.getElementById('match-result').textContent = '';
+
+  // Build pairs: english + italian
+  const cards = [];
+  DAYS.forEach(d => {
+    cards.push({ id: d.name, label: d.name,       type:'en', color: d.color });
+    cards.push({ id: d.name, label: `${d.emoji} ${d.ita}`, type:'it', color: d.color });
+  });
+
+  const shuffled = shuffle(cards);
+  const grid = document.getElementById('matchGrid');
+  grid.innerHTML = '';
+
+  shuffled.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'match-card';
+    el.textContent = c.label;
+    el.dataset.id   = c.id;
+    el.dataset.type = c.type;
+    el.dataset.idx  = i;
+    el.onclick = () => handleMatch(el, c);
+    grid.appendChild(el);
+  });
+}
+
+function handleMatch(el, card) {
+  if (el.classList.contains('matched')) return;
+
+  if (!matchSelected) {
+    el.classList.add('selected');
+    matchSelected = { el, card };
+    return;
+  }
+
+  if (matchSelected.el === el) {
+    el.classList.remove('selected');
+    matchSelected = null;
+    return;
+  }
+
+  if (matchSelected.card.id === card.id && matchSelected.card.type !== card.type) {
+    // ✅ Match!
+    [matchSelected.el, el].forEach(e => {
+      e.classList.remove('selected');
+      e.classList.add('matched');
+      e.style.background = card.color;
+      e.style.color = 'white';
+      e.style.borderColor = 'transparent';
+    });
+    matchMatched++;
+    document.getElementById('m-score').textContent = matchMatched;
+    document.getElementById('m-progress').style.width = `${(matchMatched/7)*100}%`;
+    if (matchMatched === 7) {
+      document.getElementById('match-result').innerHTML =
+        `<span style="color:#2b8a3e">🎉 All matched! Fantastic!</span>`;
+      launchConfetti();
+    }
+    matchSelected = null;
+  } else {
+    // ❌ Wrong
+    [matchSelected.el, el].forEach(e => e.classList.add('wrong-shake'));
+    setTimeout(() => {
+      matchSelected && matchSelected.el.classList.remove('selected','wrong-shake');
+      el.classList.remove('wrong-shake');
+      matchSelected = null;
+    }, 500);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════════
+function launchConfetti() {
+  const container = document.getElementById('confetti');
+  container.innerHTML = '';
+  const colors = ['#FF6B6B','#FFA94D','#FFD43B','#69DB7C','#4DABF7','#9775FA','#F783AC'];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100 + 'vw';
+    piece.style.width = piece.style.height = (8+Math.random()*10) + 'px';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDuration = (1.5+Math.random()*2) + 's';
+    piece.style.animationDelay    = (Math.random()*1) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 4000);
+}
+
+// ── Init flashcards on load ──
+renderFlashcard();
+</script>
+</body>
+</html>
