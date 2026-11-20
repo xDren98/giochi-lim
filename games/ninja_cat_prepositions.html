@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ninja Cat Prepositions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes meow-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .cat-bounce { animation: meow-bounce 1.5s infinite ease-in-out; }
+
+        .btn-lim {
+            transition: all 0.15s ease-out;
+        }
+        .btn-lim:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0px 0px rgba(0,0,0,0.2) !important;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex flex-col bg-orange-50">
+
+    <!-- Header & Scoreboard -->
+    <header class="w-full p-4 bg-white/90 backdrop-blur-md shadow-md flex justify-between items-center z-10 border-b-4 border-orange-300">
+        <a href="../index.html" class="flex items-center gap-2 bg-orange-100 hover:bg-orange-500 hover:text-white text-orange-700 px-3 py-2 rounded-2xl border-2 border-orange-300 font-black shadow-sm text-base transition shrink-0" title="Torna all'Hub Giochi">
+            🏠 Menu Giochi
+        </a>
+        <!-- TEAM A -->
+        <div class="flex items-center gap-2 bg-rose-100 p-2 rounded-2xl border-4 border-rose-300 shadow-sm">
+            <span class="text-2xl font-black text-rose-600 ml-2 hidden md:block">TEAM A</span>
+            <span class="text-3xl font-black text-rose-600 ml-2 md:hidden">A</span>
+            <div class="flex items-center ml-4 gap-2 bg-white rounded-xl p-1 shadow-inner">
+                <button onclick="updateScore('A', -1)" class="bg-rose-200 text-rose-700 w-10 h-10 rounded-lg text-2xl font-bold flex items-center justify-center">-</button>
+                <span id="scoreA" class="text-3xl font-black text-slate-700 w-12 text-center">0</span>
+                <button onclick="updateScore('A', 1)" class="bg-rose-500 text-white w-10 h-10 rounded-lg text-2xl font-bold flex items-center justify-center shadow-md">+</button>
+            </div>
+        </div>
+
+        <div class="text-4xl font-black text-orange-600 drop-shadow-sm tracking-wider uppercase hidden lg:block">
+            🐱 Ninja Cat Game
+        </div>
+
+        <!-- TEAM B -->
+        <div class="flex items-center gap-2 bg-blue-100 p-2 rounded-2xl border-4 border-blue-300 shadow-sm">
+            <div class="flex items-center mr-4 gap-2 bg-white rounded-xl p-1 shadow-inner">
+                <button onclick="updateScore('B', -1)" class="bg-blue-200 text-blue-700 w-10 h-10 rounded-lg text-2xl font-bold flex items-center justify-center">-</button>
+                <span id="scoreB" class="text-3xl font-black text-slate-700 w-12 text-center">0</span>
+                <button onclick="updateScore('B', 1)" class="bg-blue-500 text-white w-10 h-10 rounded-lg text-2xl font-bold flex items-center justify-center shadow-md">+</button>
+            </div>
+            <span class="text-2xl font-black text-blue-600 mr-2 hidden md:block">TEAM B</span>
+            <span class="text-3xl font-black text-blue-600 mr-2 md:hidden">B</span>
+        </div>
+    </header>
+
+    <!-- Gameplay Area -->
+    <main class="flex-1 relative w-full h-full overflow-hidden flex flex-col items-center justify-center p-6 gap-6">
+        
+        <!-- Central Display -->
+        <div id="displayArea" class="flex flex-col items-center justify-center bg-white/95 px-12 py-8 rounded-[3rem] shadow-2xl border-8 border-orange-200 pop-in w-full max-w-4xl text-center">
+            
+            <div class="text-7xl mb-4 cat-bounce">🐱</div>
+            
+            <h2 class="text-4xl font-bold text-slate-600 mb-2">Where is the cat?</h2>
+            
+            <!-- Italian Prompt -->
+            <div id="itSentenceDisplay" class="text-5xl md:text-6xl font-black text-slate-800 uppercase tracking-wide">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+
+        <!-- Options Grid -->
+        <div id="optionsGrid" class="grid grid-cols-2 gap-6 w-full max-w-5xl mt-2">
+            <!-- Buttons injected by JS -->
+        </div>
+        
+        <!-- Next Button -->
+        <div id="nextBtnContainer" class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 hidden z-20">
+            <button onclick="generateQuestion()" class="bg-green-500 hover:bg-green-400 text-white border-b-8 border-green-700 font-bold text-4xl py-6 px-16 rounded-full shadow-2xl transition-transform active:scale-95 flex items-center gap-4">
+                Next Turn <span class="text-5xl">➡️</span>
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // --- SCORE LOGIC ---
+        let scoreA = 0; let scoreB = 0;
+        function updateScore(team, change) {
+            if (team === 'A') {
+                scoreA = Math.max(0, scoreA + change);
+                const el = document.getElementById('scoreA');
+                el.innerText = scoreA;
+                el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in');
+            } else {
+                scoreB = Math.max(0, scoreB + change);
+                const el = document.getElementById('scoreB');
+                el.innerText = scoreB;
+                el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in');
+            }
+        }
+
+        // --- GAME LOGIC ---
+        const prepositions = [
+            { it: "DENTRO", en: "IN" },
+            { it: "SOPRA", en: "ON" },
+            { it: "SOTTO", en: "UNDER" },
+            { it: "DIETRO", en: "BEHIND" },
+            { it: "DAVANTI A", en: "IN FRONT OF" },
+            { it: "VICINO A", en: "NEXT TO" }
+        ];
+
+        const furniture = [
+            { it: "il tavolo", en: "the table" },
+            { it: "il letto", en: "the bed" },
+            { it: "il divano", en: "the sofa" },
+            { it: "la sedia", en: "the chair" },
+            { it: "la scatola", en: "the box" }
+        ];
+
+        function generateQuestion() {
+            document.getElementById('nextBtnContainer').classList.add('hidden');
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            const displayArea = document.getElementById('displayArea');
+            displayArea.classList.remove('pop-in');
+            void displayArea.offsetWidth;
+            displayArea.classList.add('pop-in');
+
+            // 1. Generate Target
+            const targetPrep = prepositions[Math.floor(Math.random() * prepositions.length)];
+            const targetFurn = furniture[Math.floor(Math.random() * furniture.length)];
+            
+            // Build the sentences
+            const italianSentence = `Il gatto è <span class="text-orange-600">${targetPrep.it}</span> ${targetFurn.it}`;
+            const correctEnglish = `${targetPrep.en} ${targetFurn.en}`;
+            
+            document.getElementById('itSentenceDisplay').innerHTML = italianSentence;
+
+            // 2. Generate Distractors (Same furniture, different prepositions)
+            let options = [correctEnglish];
+            let availablePreps = prepositions.filter(p => p.en !== targetPrep.en);
+            
+            for(let i=0; i<3; i++) {
+                let randIndex = Math.floor(Math.random() * availablePreps.length);
+                let wrongPrep = availablePreps[randIndex].en;
+                options.push(`${wrongPrep} ${targetFurn.en}`);
+                availablePreps.splice(randIndex, 1);
+            }
+
+            // 3. Shuffle Options
+            options.sort(() => Math.random() - 0.5);
+
+            // 4. Render Buttons
+            options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = `btn-lim bg-indigo-100 border-b-[10px] border-indigo-300 text-indigo-900 text-4xl md:text-5xl font-bold py-8 px-4 rounded-[2rem] w-full shadow-md uppercase tracking-wide`;
+                btn.innerText = opt;
+                
+                btn.onclick = () => handleAnswer(btn, opt === correctEnglish);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(btn, isCorrect) {
+            const allBtns = document.getElementById('optionsGrid').querySelectorAll('button');
+            allBtns.forEach(b => {
+                b.disabled = true;
+                b.style.pointerEvents = 'none';
+            });
+
+            if (isCorrect) {
+                btn.className = `btn-lim bg-green-500 border-b-[10px] border-green-700 text-white text-4xl md:text-5xl font-bold py-8 px-4 rounded-[2rem] w-full shadow-lg transform scale-105 z-10 uppercase tracking-wide`;
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            } else {
+                btn.className = `btn-lim bg-red-500 border-b-[10px] border-red-700 text-white text-4xl md:text-5xl font-bold py-8 px-4 rounded-[2rem] w-full shadow-lg shake uppercase tracking-wide`;
+            }
+            
+            document.getElementById('nextBtnContainer').classList.remove('hidden');
+        }
+
+        // Start first game
+        window.onload = generateQuestion;
+    </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLIL Biology Deluxe Quiz - Grade 4</title>
+    <!-- Libreria per i coriandoli -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* RESET & KIOSK MODE (Nessuno scroll) */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            background-color: #f0f9ff;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            touch-action: none;
+        }
+
+        /* HEADER (Punteggio e Contatore) */
+        #header {
+            height: 12vh;
+            background-color: #1e293b;
+            color: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4vw;
+            box-shadow: 0 1vh 2vh rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        #title { font-size: 3.5vh; font-weight: bold; color: #38bdf8; }
+        #score-board { font-size: 3.5vh; font-weight: bold; color: #fde047; }
+
+        /* MAIN AREA (Domanda) */
+        #main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3vh;
+            position: relative;
+        }
+        
+        #card {
+            background-color: #ffffff;
+            border: 0.8vh solid #cbd5e1;
+            border-radius: 4vh;
+            width: 90%;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4vh;
+            box-sizing: border-box;
+            box-shadow: 0 2vh 4vh rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .type-badge {
+            background-color: #e2e8f0;
+            color: #475569;
+            padding: 1vh 3vh;
+            border-radius: 2vh;
+            font-size: 3vh;
+            font-weight: bold;
+            margin-bottom: 3vh;
+            text-transform: uppercase;
+        }
+
+        #question-eng {
+            font-size: 6vh;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 2vh;
+            line-height: 1.2;
+        }
+        #question-ita {
+            font-size: 4vh;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* ANIMAZIONE ERRORE (Shake) */
+        @keyframes shake {
+            0% { transform: translateX(0); border-color: #ef4444; background-color: #fef2f2;}
+            25% { transform: translateX(-2vw); }
+            50% { transform: translateX(2vw); }
+            75% { transform: translateX(-2vw); }
+            100% { transform: translateX(0); border-color: #ef4444; background-color: #fef2f2;}
+        }
+        .shake-error {
+            animation: shake 0.5s ease-in-out;
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+        }
+
+        /* ANIMAZIONE CORRETTO */
+        .correct-glow {
+            border-color: #10b981 !important;
+            background-color: #ecfdf5 !important;
+        }
+
+        /* BUTTONS AREA (Layout Dinamico) */
+        #buttons-area {
+            height: 40vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2vw;
+            padding: 2vh 3vw;
+            background-color: #e2e8f0;
+            border-top: 1vh solid #cbd5e1;
+            flex-wrap: wrap; /* per il layout 2x2 */
+            position: relative;
+        }
+
+        .answer-btn {
+            border-radius: 2vh;
+            border: 0.6vh solid rgba(0,0,0,0.2);
+            font-family: 'Comic Sans MS', sans-serif;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 1vh 0 rgba(0,0,0,0.3);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .answer-btn:active {
+            transform: translateY(1vh);
+            box-shadow: 0 0 0 rgba(0,0,0,0.3);
+        }
+        .btn-icon { font-size: 7vh; margin-bottom: 1vh; }
+
+        /* Layout 4 Bottoni (Who am I?) */
+        .layout-mc .answer-btn {
+            width: 22%;
+            height: 85%;
+            font-size: 3.5vh;
+        }
+        /* Colori bottoni MC */
+        .btn-animal { background-color: #f59e0b; color: #fff; border-color: #b45309; }
+        .btn-plant { background-color: #10b981; color: #fff; border-color: #047857; }
+        .btn-bacteria { background-color: #14b8a6; color: #fff; border-color: #0f766e; }
+        .btn-virus { background-color: #ef4444; color: #fff; border-color: #b91c1c; }
+
+        /* Layout 2 Bottoni Giganti (Vero/Falso o Medicine) */
+        .layout-dual .answer-btn {
+            width: 45%;
+            height: 85%;
+            font-size: 6vh;
+            flex-direction: row;
+            gap: 2vw;
+        }
+        .btn-true { background-color: #3b82f6; color: white; border-color: #1d4ed8; }
+        .btn-false { background-color: #f43f5e; color: white; border-color: #be123c; }
+        .btn-vaccine { background-color: #8b5cf6; color: white; border-color: #6d28d9; }
+        .btn-antibiotic { background-color: #06b6d4; color: white; border-color: #0e7490; }
+
+        /* NEXT TURN OVERLAY (Sostituisce i bottoni quando si risponde) */
+        #next-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(226, 232, 240, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 20;
+        }
+        #feedback-text {
+            font-size: 6vh;
+            font-weight: bold;
+            margin-bottom: 3vh;
+        }
+        #btn-next {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 2vh;
+            padding: 3vh 6vh;
+            font-size: 5vh;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 1vh 0 #1d4ed8;
+            animation: pulse 1.5s infinite;
+        }
+        #btn-next:active { transform: translateY(1vh); box-shadow: none; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div id="header">
+        <a href="../index.html" style="background:#0284c7; color:#fff; border:0.4vh solid #38bdf8; border-radius:1.5vh; padding:0.8vh 2vh; text-decoration:none; font-size:2.5vh; font-weight:bold; display:inline-flex; align-items:center; gap:0.5vw;" title="Torna all'Hub Giochi">
+            🏠 Menu Giochi
+        </a>
+        <div id="title">🔬 THE GREAT MICRO-QUIZ</div>
+        <div id="score-board">
+            Turn: <span id="turn-counter">0</span> | Score: <span id="score">0</span>
+        </div>
+    </div>
+
+    <!-- Area Domanda -->
+    <div id="main-area">
+        <div id="card">
+            <div id="type-badge" class="type-badge">WELCOME!</div>
+            <div id="question-eng">Ready to play?</div>
+            <div id="question-ita">Premi il bottone gigante sotto per iniziare un nuovo gioco!</div>
+        </div>
+    </div>
+
+    <!-- Area Bottoni -->
+    <div id="buttons-area" class="layout-dual">
+        <!-- Generati dinamicamente -->
+        <button class="answer-btn btn-true" style="width: 80%; justify-content: center;" onclick="startGame()">
+            🚀 START GAME!
+        </button>
+
+        <!-- Overlay Feedback e Next Turn -->
+        <div id="next-overlay">
+            <div id="feedback-text"></div>
+            <button id="btn-next" onclick="nextQuestion()">NEXT TURN ➔</button>
+        </div>
+    </div>
+
+    <script>
+        // DATABASE 36 DOMANDE MISTE
+        const allQuestions = [
+            // --- MC: MULTIPLE CHOICE (Who am I?) ---
+            { type: 'mc', eng: "I have a green colour because of chloroplasts.", ita: "(Ho un colore verde grazie ai cloroplasti.)", answer: "PLANT" },
+            { type: 'mc', eng: "I have a tail (flagellum) to swim!", ita: "(Ho una coda chiamata flagello per nuotare!)", answer: "BACTERIA" },
+            { type: 'mc', eng: "I look like a zombie with spikes, I need to invade.", ita: "(Sembro uno zombie con le spine, devo invadere.)", answer: "VIRUS" },
+            { type: 'mc', eng: "I have a cell wall and a large vacuole full of water.", ita: "(Ho una parete cellulare e un grande vacuolo pieno d'acqua.)", answer: "PLANT" },
+            { type: 'mc', eng: "I am a living cell without a nucleus (Prokaryote).", ita: "(Sono una cellula viva senza nucleo - Procariote).", answer: "BACTERIA" },
+            { type: 'mc', eng: "I have a nucleus, but NO cell wall. Humans are made of me.", ita: "(Ho un nucleo, ma NESSUNA parete. Gli umani sono fatti di me.)", answer: "ANIMAL" },
+            { type: 'mc', eng: "I am NOT a living cell! I need a host.", ita: "(NON sono una cellula viva! Ho bisogno di un ospite.)", answer: "VIRUS" },
+            { type: 'mc', eng: "I can be good for your tummy and make yogurt.", ita: "(Posso essere buono per la tua pancia e fare lo yogurt.)", answer: "BACTERIA" },
+            { type: 'mc', eng: "I cause the flu and colds.", ita: "(Causo l'influenza e i raffreddori.)", answer: "VIRUS" },
+            { type: 'mc', eng: "I have a cell membrane, cytoplasm, and a nucleus, but no chloroplasts.", ita: "(Ho membrana, citoplasma e nucleo, ma niente cloroplasti.)", answer: "ANIMAL" },
+            { type: 'mc', eng: "I am the basic unit of a dog or a cat.", ita: "(Sono l'unità di base di un cane o un gatto.)", answer: "ANIMAL" },
+            { type: 'mc', eng: "I am the basic unit of a tree or a flower.", ita: "(Sono l'unità di base di un albero o un fiore.)", answer: "PLANT" },
+            { type: 'mc', eng: "I am microscopic, alive, and I can be shaped like a rod or a sphere.", ita: "(Sono microscopico, vivo, e posso avere forma di bastoncello o sfera.)", answer: "BACTERIA" },
+            { type: 'mc', eng: "I am just a shell with genetic material inside, waiting to attack.", ita: "(Sono solo un guscio con materiale genetico dentro, in attesa di attaccare.)", answer: "VIRUS" },
+            { type: 'mc', eng: "I use sunlight to make my own food.", ita: "(Uso la luce del sole per farmi il cibo da solo.)", answer: "PLANT" },
+            
+            // --- TF: TRUE OR FALSE ---
+            { type: 'tf', eng: "All bacteria are bad and make you sick.", ita: "(Tutti i batteri sono cattivi e ti fanno ammalare.)", answer: "FALSE" },
+            { type: 'tf', eng: "Yogurt is made using good bacteria.", ita: "(Lo yogurt si fa usando batteri buoni.)", answer: "TRUE" },
+            { type: 'tf', eng: "Viruses are living cells.", ita: "(I virus sono cellule vive.)", answer: "FALSE" },
+            { type: 'tf', eng: "Animal cells have a rigid cell wall.", ita: "(Le cellule animali hanno una parete cellulare rigida.)", answer: "FALSE" },
+            { type: 'tf', eng: "Plant cells have chloroplasts to make food from the sun.", ita: "(Le cellule vegetali hanno i cloroplasti per fare il cibo dal sole.)", answer: "TRUE" },
+            { type: 'tf', eng: "You can see bacteria with your naked eyes.", ita: "(Puoi vedere i batteri a occhio nudo.)", answer: "FALSE" },
+            { type: 'tf', eng: "A virus needs a 'host cell' to survive and multiply.", ita: "(Un virus ha bisogno di una 'cellula ospite' per sopravvivere e moltiplicarsi.)", answer: "TRUE" },
+            { type: 'tf', eng: "Plant cells have a very small vacuole.", ita: "(Le cellule vegetali hanno un vacuolo molto piccolo.)", answer: "FALSE" },
+            { type: 'tf', eng: "Humans are made of millions of animal cells.", ita: "(Gli umani sono fatti di milioni di cellule animali.)", answer: "TRUE" },
+            { type: 'tf', eng: "A bacterium has a nucleus.", ita: "(Un batterio ha un nucleo.)", answer: "FALSE" },
+            { type: 'tf', eng: "Viruses are much smaller than bacteria.", ita: "(I virus sono molto più piccoli dei batteri.)", answer: "TRUE" },
+            { type: 'tf', eng: "Your skin is made of plant cells.", ita: "(La tua pelle è fatta di cellule vegetali.)", answer: "FALSE" },
+
+            // --- MEDS: VACCINE OR ANTIBIOTIC ---
+            { type: 'meds', eng: "You have a bacterial infection!", ita: "(Hai un'infezione batterica!)", answer: "ANTIBIOTIC" },
+            { type: 'meds', eng: "You want to protect yourself from a virus (like Flu)!", ita: "(Vuoi proteggerti da un virus, come l'influenza!)", answer: "VACCINE" },
+            { type: 'meds', eng: "You have a sore throat caused by bad bacteria.", ita: "(Hai mal di gola causato da batteri cattivi.)", answer: "ANTIBIOTIC" },
+            { type: 'meds', eng: "The doctor wants to teach your body to fight a future virus.", ita: "(Il dottore vuole insegnare al tuo corpo a combattere un virus futuro.)", answer: "VACCINE" },
+            { type: 'meds', eng: "This medicine destroys the cell wall of bacteria.", ita: "(Questa medicina distrugge la parete cellulare dei batteri.)", answer: "ANTIBIOTIC" },
+            { type: 'meds', eng: "This medicine does NOT work against viruses.", ita: "(Questa medicina NON funziona contro i virus.)", answer: "ANTIBIOTIC" },
+            { type: 'meds', eng: "It prepares your immune system like a shield.", ita: "(Prepara il tuo sistema immunitario come uno scudo.)", answer: "VACCINE" },
+            { type: 'meds', eng: "You have an ear infection caused by a bacterium.", ita: "(Hai un'infezione all'orecchio causata da un batterio.)", answer: "ANTIBIOTIC" },
+            { type: 'meds', eng: "A doctor gives you this to kill living bacteria inside you.", ita: "(Un dottore ti dà questo per uccidere batteri vivi dentro di te.)", answer: "ANTIBIOTIC" }
+        ];
+
+        let playQueue = [];
+        let score = 0;
+        let turn = 0;
+        let currentQuestion = null;
+
+        function startGame() {
+            // Clona e mischia tutte le domande
+            playQueue = [...allQuestions].sort(() => Math.random() - 0.5);
+            score = 0;
+            turn = 0;
+            document.getElementById('score').innerText = score;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            // Rimuovi overlay e animazioni
+            document.getElementById('next-overlay').style.display = 'none';
+            document.getElementById('card').className = '';
+            
+            if (playQueue.length === 0) {
+                // Se hanno finito tutte e 36, ricomincia!
+                playQueue = [...allQuestions].sort(() => Math.random() - 0.5);
+            }
+
+            turn++;
+            document.getElementById('turn-counter').innerText = turn;
+            
+            currentQuestion = playQueue.pop();
+
+            // Aggiorna Testi
+            document.getElementById('question-eng').innerText = currentQuestion.eng;
+            document.getElementById('question-ita').innerText = currentQuestion.ita;
+
+            // Rendi i bottoni in base al TIPO di domanda
+            const btnArea = document.getElementById('buttons-area');
+            const badge = document.getElementById('type-badge');
+            
+            // Rimuove bottoni vecchi (tiene l'overlay nascosto)
+            Array.from(btnArea.children).forEach(child => {
+                if(child.id !== 'next-overlay') child.remove();
+            });
+
+            if (currentQuestion.type === 'mc') {
+                badge.innerText = "🔍 WHO AM I? (Chi sono?)";
+                btnArea.className = 'layout-mc';
+                btnArea.insertAdjacentHTML('afterbegin', `
+                    <button class="answer-btn btn-animal" onclick="checkAnswer('ANIMAL')">
+                        <span class="btn-icon">🦁</span>ANIMAL
+                    </button>
+                    <button class="answer-btn btn-plant" onclick="checkAnswer('PLANT')">
+                        <span class="btn-icon">🌿</span>PLANT
+                    </button>
+                    <button class="answer-btn btn-bacteria" onclick="checkAnswer('BACTERIA')">
+                        <span class="btn-icon">🦠</span>BACTERIA
+                    </button>
+                    <button class="answer-btn btn-virus" onclick="checkAnswer('VIRUS')">
+                        <span class="btn-icon">👾</span>VIRUS
+                    </button>
+                `);
+            } 
+            else if (currentQuestion.type === 'tf') {
+                badge.innerText = "⚖️ TRUE OR FALSE? (Vero o Falso?)";
+                btnArea.className = 'layout-dual';
+                btnArea.insertAdjacentHTML('afterbegin', `
+                    <button class="answer-btn btn-true" onclick="checkAnswer('TRUE')">
+                        <span class="btn-icon">🟢</span> TRUE
+                    </button>
+                    <button class="answer-btn btn-false" onclick="checkAnswer('FALSE')">
+                        <span class="btn-icon">🔴</span> FALSE
+                    </button>
+                `);
+            }
+            else if (currentQuestion.type === 'meds') {
+                badge.innerText = "🏥 HOSPITAL ZONE (Cosa usi?)";
+                btnArea.className = 'layout-dual';
+                btnArea.insertAdjacentHTML('afterbegin', `
+                    <button class="answer-btn btn-vaccine" onclick="checkAnswer('VACCINE')">
+                        <span class="btn-icon">🛡️</span> VACCINE
+                    </button>
+                    <button class="answer-btn btn-antibiotic" onclick="checkAnswer('ANTIBIOTIC')">
+                        <span class="btn-icon">💊</span> ANTIBIOTIC
+                    </button>
+                `);
+            }
+        }
+
+        function checkAnswer(selected) {
+            const card = document.getElementById('card');
+            const overlay = document.getElementById('next-overlay');
+            const feedbackText = document.getElementById('feedback-text');
+
+            if (selected === currentQuestion.answer) {
+                // RISPOSTA CORRETTA
+                score++;
+                document.getElementById('score').innerText = score;
+                card.classList.add('correct-glow');
+                feedbackText.innerHTML = "🎉 EXCELLENT! CORRECT! 🎉";
+                feedbackText.style.color = "#10b981";
+                
+                // Lancia Coriandoli
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.5 },
+                    colors: ['#38bdf8', '#fde047', '#10b981', '#f43f5e']
+                });
+            } else {
+                // RISPOSTA SBAGLIATA
+                card.classList.add('shake-error');
+                feedbackText.innerHTML = `❌ OOPS! THE ANSWER WAS: <br> <span style="color:#2563eb">${currentQuestion.answer}</span>`;
+                feedbackText.style.color = "#ef4444";
+            }
+
+            // Mostra l'overlay del "Next Turn" sopra l'area bottoni
+            overlay.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

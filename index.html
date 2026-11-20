@@ -15,6 +15,7 @@
             --yellow: #ffc107;
             --purple: #9c27b0;
             --teal: #009688;
+            --orange: #f97316;
             --bg-gradient: linear-gradient(135deg, #b3e5fc 0%, #e1f5fe 40%, #fff9c4 100%);
             --text-dark: #263238;
         }
@@ -365,64 +366,6 @@
             filter: brightness(1.1);
         }
 
-        /* CARD CLASSE 4 & IN ARRIVO */
-        .card-preview {
-            background: rgba(255, 255, 255, 0.85);
-            border: 4px dashed #78909c;
-            border-radius: 24px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 320px;
-        }
-
-        .card-preview-icon {
-            font-size: 3.2rem;
-            margin-bottom: 10px;
-        }
-
-        .card-preview h3 {
-            margin: 0 0 8px 0;
-            font-size: 1.45rem;
-            color: #37474f;
-        }
-
-        .card-preview p {
-            font-size: 0.95rem;
-            color: #546e7a;
-            line-height: 1.45;
-            margin-bottom: 14px;
-        }
-
-        .preview-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 16px 0;
-        }
-
-        .preview-list li {
-            padding: 6px 0;
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: #00796b;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-coming-soon {
-            display: inline-block;
-            background: #fff8e1;
-            color: #f57f17;
-            border: 2px solid #ffe082;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.88rem;
-            text-align: center;
-        }
-
         /* EMPTY SEARCH STATE */
         .empty-state {
             grid-column: 1 / -1;
@@ -480,7 +423,7 @@
             </div>
         </div>
         <div class="header-actions">
-            <div class="badge-count" id="totalGamesBadge">🎮 6 Giochi Pronti</div>
+            <div class="badge-count" id="totalGamesBadge">🎮 8 Giochi Pronti</div>
             <button class="btn-fullscreen" id="btnFs" onclick="toggleFullScreen()" title="Ingrandisci per la LIM">
                 <span>⛶</span> Schermo Intero
             </button>
@@ -492,7 +435,7 @@
         <!-- TASTI FILTRO CLASSI -->
         <div class="class-filters" id="classFilters">
             <button class="filter-btn active" onclick="setFilter('all', this)">
-                🌈 Tutte le Classi <span class="btn-count">6</span>
+                🌈 Tutte le Classi <span class="btn-count">8</span>
             </button>
             <button class="filter-btn" onclick="setFilter('1', this)">
                 ⭐ Classe 1ª <span class="btn-count">1</span>
@@ -504,7 +447,7 @@
                 📅 Classe 3ª <span class="btn-count">1</span>
             </button>
             <button class="filter-btn" onclick="setFilter('4', this)">
-                🔬 Classe 4ª <span class="btn-count">In arrivo</span>
+                🔬 Classe 4ª <span class="btn-count">2</span>
             </button>
             <button class="filter-btn" onclick="setFilter('5', this)">
                 📚 Classe 5ª <span class="btn-count">1</span>
@@ -514,7 +457,7 @@
         <!-- CAMPO DI RICERCA -->
         <div class="search-wrap">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Cerca un'attività, materia o argomento (es. body, shapes, week, subjects...)" oninput="filterGames()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cerca un'attività, materia o argomento (es. ninja, biology, body, shapes, week...)" oninput="filterGames()">
         </div>
     </div>
 
@@ -616,6 +559,36 @@
                 file: "games/days_of_the_week.html"
             },
             {
+                id: "ninja-cat-prepositions",
+                classe: "4",
+                classeLabel: "Classe 4ª",
+                classeColor: "#f97316",
+                title: "Ninja Cat Prepositions",
+                subtitle: "Where is the Cat? • Preposizioni di Luogo",
+                desc: "Divertente gioco a squadre (Team A vs Team B) con segnapunti per la LIM! Scopri dove si nasconde il gatto ninja (in, on, under, behind, in front of, between, next to) e tocca la risposta esatta.",
+                emoji: "🐱",
+                color: "#ea580c",
+                bgGradient: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+                tag: "Inglese & Preposizioni",
+                btnText: "▶ Gioca con Ninja Cat",
+                file: "games/ninja_cat_prepositions.html"
+            },
+            {
+                id: "biology-quiz",
+                classe: "4",
+                classeLabel: "Classe 4ª",
+                classeColor: "#0284c7",
+                title: "The Great Micro-Quiz",
+                subtitle: "CLIL Scienze: Cellula, Virus & Batteri",
+                desc: "Quiz deluxe ad alta interattività per la LIM: cellule animali vs vegetali, microscopi, batteri buoni vs cattivi, virus, antibiotici e vaccini con punteggio e coriandoli!",
+                emoji: "🔬",
+                color: "#0284c7",
+                bgGradient: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
+                tag: "Scienze CLIL",
+                btnText: "▶ Avvia Micro-Quiz",
+                file: "games/biology_quiz_lim.html"
+            },
+            {
                 id: "school-subjects",
                 classe: "5",
                 classeLabel: "Classe 5ª",
@@ -684,33 +657,8 @@
                 grid.appendChild(card);
             });
 
-            // MOSTRA ANTEPRIMA / IN ARRIVO PER CLASSE 4
-            if ((currentFilter === 'all' || currentFilter === '4') && (!query || query.includes('4') || query.includes('scien') || query.includes('prep') || query.includes('cell'))) {
-                const previewCard = document.createElement('div');
-                previewCard.className = 'card-preview';
-                previewCard.innerHTML = `
-                    <div>
-                        <div class="card-top-badges">
-                            <span class="badge-classe" style="background:#0284c7;">Classe 4ª</span>
-                            <span class="badge-coming-soon">⏳ Prossimamente</span>
-                        </div>
-                        <div class="card-preview-icon">🔬</div>
-                        <h3>Attività Didattiche Classe 4ª</h3>
-                        <p>I moduli interattivi per la classe quarta sono in fase di preparazione e integrazione:</p>
-                        <ul class="preview-list">
-                            <li>🦠 <b>Scienze CLIL</b>: Cellula, virus e batteri</li>
-                            <li>📍 <b>Inglese Grammatica</b>: Prepositions of place</li>
-                        </ul>
-                    </div>
-                    <div class="badge-coming-soon" style="width:100%; font-size:1rem; padding:10px;">
-                        ✨ Disponibili a breve
-                    </div>
-                `;
-                grid.appendChild(previewCard);
-            }
-
             // STATO VUOTO (Se nessun risultato corrisponde alla ricerca)
-            if (filtered.length === 0 && currentFilter !== '4') {
+            if (filtered.length === 0) {
                 const empty = document.createElement('div');
                 empty.className = 'empty-state';
                 empty.innerHTML = `

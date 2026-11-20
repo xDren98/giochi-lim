@@ -5,7 +5,7 @@ Tutti i giochi sono progettati per lezioni coinvolgenti nella scuola primaria, c
 
 ---
 
-## 📁 Struttura del Progetto
+## 📁 Struttura del Progetto (8 Giochi Interattivi)
 
 ```text
 giochi-lim/
@@ -17,6 +17,8 @@ giochi-lim/
     ├── gioco_LIM_body_adventure.html    # Classe 2ª: The Body Adventure (Simon Says, Monster Lab, Memory)
     ├── word_image_match.html            # Classe 2ª: Word & Picture Match! (Days, Body, Animals, Food)
     ├── days_of_the_week.html            # Classe 3ª: Days of the Week (Flashcards, Quiz, Ordinamento)
+    ├── ninja_cat_prepositions.html      # Classe 4ª: Ninja Cat Prepositions (Team Scoreboard & Luoghi)
+    ├── biology_quiz_lim.html            # Classe 4ª: The Great Micro-Quiz (Scienze CLIL: Cellule, Virus, Batteri)
     └── gioco_LIM_school_subjects.html   # Classe 5ª: School Subjects Challenge (Quiz, Glossario & Badges)
 ```
 
@@ -29,22 +31,5 @@ giochi-lim/
    ```html
    <a href="../index.html" class="btn-ctrl">🏠 Menu Giochi</a>
    ```
-3. Registra il nuovo gioco nell'array `GIOCHI` all'interno di `index.html`:
-   ```javascript
-   {
-       id: "mio-gioco",
-       classe: "4",
-       classeLabel: "Classe 4ª",
-       classeColor: "#0284c7",
-       title: "Titolo del Gioco",
-       subtitle: "Sottotitolo",
-       desc: "Descrizione delle attività per i bambini",
-       emoji: "🎨",
-       color: "#0284c7",
-       bgGradient: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)",
-       tag: "Scienze • CLIL",
-       btnText: "▶ Gioca Ora",
-       file: "games/mio_nuovo_gioco.html"
-   }
-   ```
+3. Registra il nuovo gioco nell'array `GIOCHI` all'interno di `index.html`.
 4. Salva il file: la card comparirà automaticamente nel portale con i rispettivi filtri per classe!
