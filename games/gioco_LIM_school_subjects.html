@@ -937,6 +937,7 @@
     </div>
 
     <!-- JAVASCRIPT GAME LOGIC -->
+    <script src="educational-speech.js"></script>
     <script>
         /* ==================== AUDIO SYNTHESIS (NO EXTERNAL FILES) ==================== */
         let soundEnabled = true;
@@ -992,27 +993,7 @@
             playTone(750, 'sine', 0.08, 0.15);
         }
 
-        /* ==================== SPEECH SYNTHESIS ==================== */
-        function speakEnglish(text, onEnd) {
-            if (!soundEnabled) {
-                if (onEnd) onEnd();
-                return;
-            }
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.88; // Ideal natural pace for 5th graders
-                utterance.pitch = 1.05;
-
-                const voices = window.speechSynthesis.getVoices();
-                const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')));
-                if (enVoice) utterance.voice = enVoice;
-
-                if (onEnd) utterance.onend = onEnd;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
+        /* ==================== SPEECH SYNTHESIS GESTITO DA EDUCATIONAL-SPEECH.JS ==================== */
 
         // Audio Toggle
         const btnSoundToggle = document.getElementById('btnSoundToggle');

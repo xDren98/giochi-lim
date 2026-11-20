@@ -6,6 +6,7 @@
     <title>CLIL Biology Deluxe Quiz - Grade 4</title>
     <!-- Libreria per i coriandoli -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="educational-speech.js"></script>
     <style>
         /* RESET & KIOSK MODE (Nessuno scroll) */
         body {
@@ -320,6 +321,7 @@
             // Aggiorna Testi
             document.getElementById('question-eng').innerText = currentQuestion.eng;
             document.getElementById('question-ita').innerText = currentQuestion.ita;
+            speakEnglish(currentQuestion.eng);
 
             // Rendi i bottoni in base al TIPO di domanda
             const btnArea = document.getElementById('buttons-area');
@@ -404,6 +406,13 @@
             // Mostra l'overlay del "Next Turn" sopra l'area bottoni
             overlay.style.display = 'flex';
         }
+
+        // Clicca sulla card per riascoltare la pronuncia
+        document.getElementById('card').addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.eng) {
+                speakEnglish(currentQuestion.eng);
+            }
+        });
     </script>
 </body>
 </html>

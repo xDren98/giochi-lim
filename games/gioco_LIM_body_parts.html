@@ -82,6 +82,7 @@
     <div id="message"></div>
     <button class="btn-reset" onclick="location.reload()">🔄 Play Again!</button>
 
+    <script src="educational-speech.js"></script>
     <script>
         let selectedWord = null;
         let selectedImage = null;
@@ -101,6 +102,7 @@
             words.forEach(x => x.classList.remove('selected'));
             w.classList.add('selected');
             selectedWord = w;
+            speakEnglish(w.textContent.trim());
             checkMatch();
         }));
 

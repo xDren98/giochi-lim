@@ -599,6 +599,7 @@
   <!-- Confetti container -->
   <div class="confetti-container" id="confetti"></div>
 
+<script src="educational-speech.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
 //  DATA
@@ -642,12 +643,15 @@ function showSection(id) {
   DAYS.forEach(d => {
     const strip = document.createElement('div');
     strip.className = 'day-strip';
+    strip.style.cursor = 'pointer';
+    strip.title = 'Tocca per ascoltare la pronuncia!';
     strip.style.background = `linear-gradient(135deg, ${d.color}, ${d.color}cc)`;
     strip.innerHTML = `
       <span class="num">${d.emoji}</span>
-      <span class="name">${d.name}</span>
+      <span class="name">${d.name} 🔊</span>
       <span class="ita">${d.ita}</span>
     `;
+    strip.addEventListener('click', () => speakEnglish(d.name));
     container.appendChild(strip);
   });
 })();
@@ -662,6 +666,7 @@ function renderFlashcard() {
   fcFlipped = false;
   document.getElementById('fc').classList.remove('flipped');
   const d = DAYS[fcIndex];
+  speakEnglish(d.name);
   document.getElementById('fc-emoji').textContent  = d.emoji;
   document.getElementById('fc-emoji2').textContent = d.emoji;
   document.getElementById('fc-day').textContent    = d.name;

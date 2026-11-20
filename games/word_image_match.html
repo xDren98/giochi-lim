@@ -378,6 +378,7 @@
   <!-- Confetti canvas -->
   <div class="confetti-layer" id="confettiLayer"></div>
 
+<script src="educational-speech.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════
 //  VOCABULARY POOL  ─  10 pairs per topic (6 chosen per game)
@@ -583,6 +584,7 @@ function onWordClick(card) {
   // Select this card
   card.classList.add('selected');
   selectedWord = { el: card, word: card.dataset.word };
+  speakEnglish(card.dataset.word);
   setInstruction(`💡 Now find the picture for <strong>${card.dataset.word}</strong>!`);
 }
 
