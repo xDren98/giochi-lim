@@ -3,6 +3,7 @@
 <head>
     <meta name="referrer" content="no-referrer">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Body Parts - LIM Game</title>
     <style>
         body { font-family: 'Comic Sans MS', sans-serif; background-color: #e0f7fa; text-align: center; margin: 0; padding: 20px; }
@@ -88,6 +89,7 @@
         let selectedWord = null;
         let selectedImage = null;
         let matches = 0;
+        let isProcessing = false;
 
         const words = document.querySelectorAll('.word');
         const images = document.querySelectorAll('.emoji-card');
@@ -100,6 +102,7 @@
         }
 
         words.forEach(w => w.addEventListener('click', () => {
+            if (isProcessing || w.style.visibility === 'hidden') return;
             words.forEach(x => x.classList.remove('selected'));
             w.classList.add('selected');
             selectedWord = w;
@@ -108,6 +111,7 @@
         }));
 
         images.forEach(i => i.addEventListener('click', () => {
+            if (isProcessing || i.style.visibility === 'hidden') return;
             images.forEach(x => x.classList.remove('selected'));
             i.classList.add('selected');
             selectedImage = i;
@@ -115,34 +119,39 @@
         }));
 
         function checkMatch() {
-            if(selectedWord && selectedImage) {
-                if(selectedWord.dataset.match === selectedImage.dataset.match) {
+            if(selectedWord && selectedImage && !isProcessing) {
+                isProcessing = true;
+                const currentWord = selectedWord;
+                const currentImg = selectedImage;
+
+                if(currentWord.dataset.match === currentImg.dataset.match) {
                     msg.textContent = "🎉 YES! GOOD JOB! 🎉";
                     msg.style.color = "#4caf50";
-                    let w = selectedWord;
-                    let img = selectedImage;
                     setTimeout(() => {
-                        w.style.visibility = 'hidden';
-                        img.style.visibility = 'hidden';
-                        w.classList.remove('selected');
-                        img.classList.remove('selected');
+                        currentWord.style.visibility = 'hidden';
+                        currentImg.style.visibility = 'hidden';
+                        currentWord.classList.remove('selected');
+                        currentImg.classList.remove('selected');
                         selectedWord = null;
                         selectedImage = null;
+                        isProcessing = false;
                         msg.textContent = "";
                         matches++;
                         if(matches === 6) {
                             msg.textContent = "🏆 AMAZING! YOU WIN! 🏆";
                             msg.style.color = "#ff5722";
+                            speakEnglish("Amazing! You win!");
                         }
                     }, 1000);
                 } else {
                     msg.textContent = "❌ Oh no! Try again! ❌";
                     msg.style.color = "#f44336";
                     setTimeout(() => {
-                        selectedWord.classList.remove('selected');
-                        selectedImage.classList.remove('selected');
+                        currentWord.classList.remove('selected');
+                        currentImg.classList.remove('selected');
                         selectedWord = null;
                         selectedImage = null;
+                        isProcessing = false;
                         msg.textContent = "";
                     }, 1000);
                 }
