@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta name="referrer" content="no-referrer">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>♾️ Frequency Quest! — Gioco Infinito sugli Avverbi di Frequenza (5ª Primaria)</title>
+<script src="educational-speech.js?v=3.0"></script>
+<style>
+  :root {
+    --indigo: #4338ca;
+    --violet: #7c3aed;
+    --green: #15803d;
+    --red: #b91c1c;
+    --amber: #d97706;
+    --blue: #1d4ed8;
+    --teal: #0f766e;
+    --slate: #0f172a;
+    --muted: #475569;
+  }
+  * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  body {
+    margin: 0;
+    padding: 14px 16px 32px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #e0e7ff 0%, #dcfce7 50%, #fef3c7 100%);
+    min-height: 100vh;
+    color: var(--slate);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wrap { width: 100%; max-width: 1020px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* HEADER */
+  header {
+    background: #fff;
+    border-radius: 22px;
+    padding: 16px 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .h-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  h1 { margin: 0; font-size: clamp(1.25rem, 2.5vw, 1.9rem); color: var(--indigo); }
+  .sub { margin: 2px 0 0; font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+
+  .controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn {
+    border: 2px solid #cbd5e1;
+    background: #fff;
+    color: var(--slate);
+    border-radius: 14px;
+    padding: 8px 14px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.12s, background 0.15s, border-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: #f8fafc; border-color: #94a3b8; }
+  .btn:active { transform: scale(0.95); }
+  .btn.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .btn-primary {
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    color: #fff;
+    border-color: #4338ca;
+    box-shadow: 0 4px 14px rgba(67, 56, 202, 0.25);
+  }
+  .btn-primary:hover { background: linear-gradient(135deg, #3730a3, #4f46e5); }
+  .btn-green {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: #fff;
+    border-color: #15803d;
+  }
+
+  /* SCOREBOARD */
+  .scoreboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .stat-box {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .stat-box.turn-a { border-color: #2563eb; background: #eff6ff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18); transform: scale(1.02); }
+  .stat-box.turn-b { border-color: #16a34a; background: #f0fdf4; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.18); transform: scale(1.02); }
+  .stat-label { font-size: 0.82rem; font-weight: 800; color: var(--muted); text-transform: uppercase; }
+  .stat-val { font-size: 1.55rem; font-weight: 900; color: var(--indigo); }
+
+  /* FILTER PILLS */
+  .mode-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .pill {
+    border: 2px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+    border-radius: 999px;
+    padding: 6px 13px;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pill.on { background: var(--violet); color: #fff; border-color: var(--violet); }
+
+  /* RIPASSO */
+  .help-panel {
+    background: #fff;
+    border-radius: 20px;
+    padding: 16px 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .adv-card {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 14px;
+    padding: 9px 12px;
+  }
+  .adv-card strong { color: var(--indigo); font-size: 1.05rem; display: block; }
+  .adv-card span { font-size: 0.82rem; color: var(--muted); font-weight: 700; }
+  .rule-banner {
+    background: #eef2ff;
+    border: 2px solid #a5b4fc;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  /* STAGE */
+  .stage {
+    background: #fff;
+    border-radius: 26px;
+    padding: 22px 24px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.09);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 360px;
+  }
+  .stage-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
+  }
+  .type-badge {
+    background: #eef2ff;
+    color: var(--indigo);
+    border: 2px solid #c7d2fe;
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+  .turn-badge {
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+  .turn-badge.a { background: #dbeafe; color: #1e40af; }
+  .turn-badge.b { background: #dcfce7; color: #166534; }
+  .turn-badge.solo { background: #fef3c7; color: #92400e; }
+
+  .q-prompt {
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    font-weight: 800;
+    color: var(--slate);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .q-emoji { font-size: 2.1rem; }
+
+  /* OPTIONS */
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .opt-btn {
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 3px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--slate);
+    cursor: pointer;
+    transition: all 0.14s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: #6366f1; background: #eef2ff; transform: translateX(3px); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+  .opt-btn.wrong { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+
+  /* FREQUENCY BAR */
+  .pct-card {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 18px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pct-track { width: 100%; height: 18px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+  .pct-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #10b981); border-radius: 999px; transition: width 0.3s; }
+  .adv-btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .adv-choice {
+    padding: 14px 10px;
+    border-radius: 16px;
+    border: 3px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 1.08rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.14s;
+  }
+  .adv-choice:hover:not(:disabled) { border-color: var(--indigo); background: #eef2ff; transform: translateY(-2px); }
+  .adv-choice.correct { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+  .adv-choice.wrong { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+
+  /* WORD ORDER BUILDER */
+  .drop-zone {
+    min-height: 60px;
+    border: 3px dashed #94a3b8;
+    border-radius: 16px;
+    padding: 10px;
+    background: #f8fafc;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .drop-zone.correct { border-color: #16a34a; background: #f0fdf4; border-style: solid; }
+  .drop-zone.wrong { border-color: #dc2626; background: #fef2f2; }
+  .word-bank { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 6px; }
+  .w-chip {
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 2px solid #94a3b8;
+    background: #fff;
+    font-size: 1.04rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .w-chip.placed { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .w-chip:active { transform: scale(0.94); }
+
+  /* SPEAKING CARD */
+  .speaking-box {
+    background: linear-gradient(135deg, #ede9fe, #e0e7ff);
+    border: 3px solid #7c3aed;
+    border-radius: 20px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* FEEDBACK & NEXT */
+  .feedback-banner {
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .feedback-banner.ok { background: #dcfce7; color: #14532d; border: 2px solid #22c55e; }
+  .feedback-banner.err { background: #fee2e2; color: #7f1d1d; border: 2px solid #ef4444; }
+
+  /* ROUND CELEBRATION */
+  .round-modal {
+    background: linear-gradient(135deg, #fef3c7, #ede9fe);
+    border: 4px solid #7c3aed;
+    border-radius: 24px;
+    padding: 26px 22px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="h-top">
+      <div>
+        <h1>♾️ Frequency Quest! — Gioco Infinito</h1>
+        <p class="sub">Avverbi di frequenza (always, usually, often, sometimes, never) · Sfida infinita per la LIM</p>
+      </div>
+      <div class="controls-row">
+        <a href="../index.html" class="btn" style="text-decoration:none; background:#fff3e0; border-color:#ff9800; color:#e65100;" title="Torna all'Hub Giochi">🏠 Menu Giochi</a>
+        <button id="modePlayersBtn" class="btn" type="button">👥 2 Squadre: OFF</button>
+        <button id="lapModeBtn" class="btn" type="button">🏁 Giri da 10</button>
+        <button id="soundBtn" class="btn active" type="button">🔊 Suoni ON</button>
+        <button id="helpBtn" class="btn" type="button">📌 Regola</button>
+        <button id="resetBtn" class="btn" type="button">🔄 Azzera</button>
+      </div>
+    </div>
+
+    <!-- SCOREBOARD -->
+    <div class="scoreboard" id="scoreboard"></div>
+
+    <!-- CATEGORY FILTER -->
+    <div class="mode-bar">
+      <span style="font-size:0.84rem; font-weight:800; color:var(--muted);">Allenamento:</span>
+      <button class="pill on" data-cat="all" type="button">🎲 Tutto Misto (Infinito)</button>
+      <button class="pill" data-cat="position" type="button">📍 Posizione nella frase</button>
+      <button class="pill" data-cat="meaning" type="button">📊 Percentuali &amp; Significato</button>
+      <button class="pill" data-cat="builder" type="button">🧩 Costruisci la frase</button>
+      <button class="pill" data-cat="grammar" type="button">🔧 3ª Persona &amp; To Be</button>
+      <button class="pill" data-cat="speaking" type="button">🗣️ Speaking Turno</button>
+    </div>
+  </header>
+
+  <!-- RIPASSO RAPIDO -->
+  <section id="helpPanel" class="help-panel hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong style="font-size:1.1rem; color:var(--indigo);">📌 Come si usano gli Avverbi di Frequenza</strong>
+      <button id="closeHelpBtn" class="btn" type="button" style="padding:5px 10px;">Chiudi ✖</button>
+    </div>
+    <div class="help-grid">
+      <div class="adv-card"><strong>always (100%)</strong><span>sempre ⭐⭐⭐⭐⭐</span></div>
+      <div class="adv-card"><strong>usually (80%)</strong><span>di solito ⭐⭐⭐⭐☆</span></div>
+      <div class="adv-card"><strong>often (60%)</strong><span>spesso ⭐⭐⭐☆☆</span></div>
+      <div class="adv-card"><strong>sometimes (40%)</strong><span>a volte ⭐⭐☆☆☆</span></div>
+      <div class="adv-card"><strong>never (0%)</strong><span>mai ☆☆☆☆☆</span></div>
+    </div>
+    <div class="rule-banner">
+      <strong>1. PRIMA del verbo principale:</strong> <em>I <strong>always</strong> wake up at 7.</em> · <em>Marco <strong>never</strong> eats fish.</em><br>
+      <strong>2. DOPO il verbo TO BE (am / is / are):</strong> <em>We are <strong>never</strong> late!</em> · <em>Giulia is <strong>usually</strong> happy.</em><br>
+      <strong>3. Attenzione alla 3ª persona (he/she/it):</strong> il verbo prende sempre <strong>-s / -es</strong>! (<em>He often <strong>watches</strong> TV</em>).
+    </div>
+  </section>
+
+  <!-- MAIN GAME STAGE -->
+  <main class="stage" id="gameStage">
+    <div class="stage-top">
+      <span id="typeBadge" class="type-badge">📍 Posizione</span>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span id="roundBadge" style="font-size:0.9rem; font-weight:800; color:var(--muted);">Giro 1 · Domanda 1/10</span>
+        <span id="turnBadge" class="turn-badge solo">Sfida Singola</span>
+      </div>
+    </div>
+
+    <div id="questionArea"></div>
+
+    <div id="feedbackArea" class="hidden"></div>
+  </main>
+
+  <!-- END OF LAP CELEBRATION (continues infinitely!) -->
+  <section id="lapModal" class="round-modal hidden">
+    <div style="font-size:3.2rem;">🎉</div>
+    <h2 id="lapTitle" style="margin:0; font-size:1.7rem; color:var(--indigo);">Giro 1 Completato!</h2>
+    <p id="lapSubtitle" style="margin:0; font-size:1.05rem; font-weight:700; color:var(--slate);"></p>
+    <button id="nextLapBtn" class="btn btn-primary" type="button" style="font-size:1.1rem; padding:12px 24px;">
+      🚀 Inizia il prossimo Giro! (Infinito ♾️)
+    </button>
+  </section>
+
+</div>
+
+<script>
+  // ==================== AUDIO SYNTH (OFFLINE, ZERO ASSETS) ====================
+  let soundOn = true;
+  let audioCtx = null;
+  function playTone(type) {
+    if (!soundOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      if (type === 'ok') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.setValueAtTime(175, now + 0.12);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+    } catch (e) {}
+  }
+
+  // Speech gestito da educational-speech.js?v=3.0 (window.speakEnglish)
+
+  // ==================== PROCEDURAL DATA POOLS ====================
+  const subjects = [
+    { name: 'I', type: '1s', be: 'am', poss: 'my' },
+    { name: 'You', type: '2', be: 'are', poss: 'your' },
+    { name: 'We', type: 'pl', be: 'are', poss: 'our' },
+    { name: 'They', type: 'pl', be: 'are', poss: 'their' },
+    { name: 'Leo', type: '3s', be: 'is', poss: 'his' },
+    { name: 'Giulia', type: '3s', be: 'is', poss: 'her' },
+    { name: 'My brother', type: '3s', be: 'is', poss: 'his' },
+    { name: 'My sister', type: '3s', be: 'is', poss: 'her' },
+    { name: 'Marco and Sara', type: 'pl', be: 'are', poss: 'their' }
+  ];
+
+  const mainVerbs = [
+    { base: 'wake up', s3: 'wakes up', obj: 'at 7 o’clock', emoji: '⏰' },
+    { base: 'have breakfast', s3: 'has breakfast', obj: 'with milk and biscuits', emoji: '🥣' },
+    { base: 'brush', s3: 'brushes', obj: '{poss} teeth after breakfast', emoji: '🪥' },
+    { base: 'go', s3: 'goes', obj: 'to school by bus', emoji: '🚌' },
+    { base: 'do', s3: 'does', obj: '{poss} homework in the afternoon', emoji: '📚' },
+    { base: 'play', s3: 'plays', obj: 'football in the park', emoji: '⚽' },
+    { base: 'play', s3: 'plays', obj: 'video games after school', emoji: '🎮' },
+    { base: 'watch', s3: 'watches', obj: 'TV after dinner', emoji: '📺' },
+    { base: 'read', s3: 'reads', obj: 'a comic book in bed', emoji: '📖' },
+    { base: 'tidy', s3: 'tidies', obj: '{poss} bedroom on Saturday', emoji: '🧹' },
+    { base: 'listen', s3: 'listens', obj: 'to music in the evening', emoji: '🎧' },
+    { base: 'ride', s3: 'rides', obj: '{poss} bike on Sunday', emoji: '🚲' },
+    { base: 'drink', s3: 'drinks', obj: 'orange juice in the morning', emoji: '🍊' },
+    { base: 'eat', s3: 'eats', obj: 'pizza on Friday', emoji: '🍕' }
+  ];
+
+  const beComps = [
+    { comp: 'late for school', emoji: '🏃' },
+    { comp: 'happy on Friday', emoji: '😄' },
+    { comp: 'tired in the evening', emoji: '😴' },
+    { comp: 'hungry at lunchtime', emoji: '🍽️' },
+    { comp: 'ready for English class', emoji: '🇬🇧' },
+    { comp: 'nice to friends', emoji: '🤝' }
+  ];
+
+  const adverbs = [
+    { word: 'always', pct: 100, clueIt: 'ogni giorno senza eccezioni (7 giorni su 7)', stars: '⭐⭐⭐⭐⭐' },
+    { word: 'usually', pct: 80, clueIt: 'quasi sempre, di solito (5-6 giorni su 7)', stars: '⭐⭐⭐⭐☆' },
+    { word: 'often', pct: 60, clueIt: 'spesso (3-4 giorni su 7)', stars: '⭐⭐⭐☆☆' },
+    { word: 'sometimes', pct: 40, clueIt: 'qualche volta / a volte (1-2 giorni su 7)', stars: '⭐⭐☆☆☆' },
+    { word: 'never', pct: 0, clueIt: 'proprio mai! (0 giorni su 7)', stars: '☆☆☆☆☆' }
+  ];
+
+  const meaningScenarios = [
+    { en: 'Tom plays basketball every single day (7 days a week).', it: '7 giorni su 7', pct: 100, answer: 'always', emoji: '🏀' },
+    { en: 'Sara hates coffee. She drinks it 0 times a week!', it: '0 volte!', pct: 0, answer: 'never', emoji: '☕' },
+    { en: 'Marco eats cereal for breakfast 5 or 6 mornings a week.', it: 'Quasi sempre (80%)', pct: 80, answer: 'usually', emoji: '🥣' },
+    { en: 'Giulia reads comics 3 or 4 afternoons a week.', it: 'Spesso (60%)', pct: 60, answer: 'often', emoji: '📖' },
+    { en: 'We go to the cinema once or twice a month.', it: 'Qualche volta (40%)', pct: 40, answer: 'sometimes', emoji: '🎬' },
+    { en: 'Leo brushes his teeth every morning and every night!', it: 'Sempre (100%)', pct: 100, answer: 'always', emoji: '🪥' },
+    { en: 'My dog eats chocolate 0 times because it is bad for dogs.', it: 'Mai! (0%)', pct: 0, answer: 'never', emoji: '🐶' },
+    { en: 'I walk to school most days (almost every day).', it: 'Di solito (80%)', pct: 80, answer: 'usually', emoji: '🚶' },
+    { en: 'On rainy weekends, Anna plays board games.', it: 'A volte (40%)', pct: 40, answer: 'sometimes', emoji: '🎲' },
+    { en: 'Our teacher gives us fun games 3 times a week!', it: 'Spesso (60%)', pct: 60, answer: 'often', emoji: '🎉' }
+  ];
+
+  const speakingCards = [
+    { q: 'What do you ALWAYS do before going to bed?', starter: 'Before going to bed, I always...', emoji: '🌙' },
+    { q: 'What do you NEVER eat for breakfast?', starter: 'I never eat ... for breakfast!', emoji: '🥐' },
+    { q: 'How often do you play video games?', starter: 'I usually / often / sometimes / never play...', emoji: '🎮' },
+    { q: 'What do you USUALLY do on Sunday morning?', starter: 'On Sunday morning, I usually...', emoji: '☀️' },
+    { q: 'Are you EVER late for school?', starter: 'No, I am never late! / Yes, I am sometimes late.', emoji: '🏫' },
+    { q: 'How often do you tidy your bedroom?', starter: 'I ... tidy my bedroom!', emoji: '🧹' },
+    { q: 'What do you OFTEN do with your friends?', starter: 'With my friends, I often...', emoji: '🤝' },
+    { q: 'How often do you watch TV in English?', starter: 'I sometimes / never watch TV in English!', emoji: '📺' }
+  ];
+
+  // ==================== HELPERS ====================
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function resolveObj(objStr, subj) {
+    return objStr.replace('{poss}', subj.poss);
+  }
+
+  // ==================== QUESTION GENERATORS ====================
+  const recentKeys = [];
+  function rememberKey(key) {
+    recentKeys.push(key);
+    if (recentKeys.length > 25) recentKeys.shift();
+  }
+
+  function genPositionQuestion() {
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const useBe = Math.random() < 0.38;
+      const subj = pick(subjects);
+      const adv = pick(adverbs);
+      if (useBe) {
+        const bc = pick(beComps);
+        const key = `pos-be-${subj.name}-${adv.word}-${bc.comp}`;
+        if (recentKeys.includes(key) && attempt < 15) continue;
+        rememberKey(key);
+        const correct = `${subj.name} ${subj.be} ${adv.word} ${bc.comp}.`;
+        const w1 = `${subj.name} ${adv.word} ${subj.be} ${bc.comp}.`;
+        const w2 = `${subj.name} ${subj.be} ${bc.comp.split(' ')[0]} ${adv.word} ${bc.comp.split(' ').slice(1).join(' ')}.`.replace(/\s+\./, '.');
+        return {
+          cat: 'position',
+          badge: '📍 Posizione con TO BE',
+          emoji: bc.emoji,
+          prompt: `Scegli la frase corretta con il verbo TO BE (<strong>${adv.word}</strong>):`,
+          spoken: correct,
+          options: shuffle([
+            { text: correct, isCorrect: true },
+            { text: w1, isCorrect: false },
+            { text: w2 === correct ? `${adv.word.charAt(0).toUpperCase() + adv.word.slice(1)} ${subj.name.toLowerCase()} ${subj.be} ${bc.comp}.` : w2, isCorrect: false }
+          ]),
+          explain: `Con il verbo <strong>TO BE</strong> (${subj.be}), l'avverbio va <strong>DOPO</strong> il verbo: <em>${correct}</em>`
+        };
+      } else {
+        const mv = pick(mainVerbs);
+        const obj = resolveObj(mv.obj, subj);
+        const verbForm = subj.type === '3s' ? mv.s3 : mv.base;
+        const key = `pos-mv-${subj.name}-${adv.word}-${mv.base}`;
+        if (recentKeys.includes(key) && attempt < 15) continue;
+        rememberKey(key);
+        const correct = `${subj.name} ${adv.word} ${verbForm} ${obj}.`;
+        const w1 = `${subj.name} ${verbForm} ${adv.word} ${obj}.`;
+        const w2 = subj.type === '3s'
+          ? `${subj.name} ${adv.word} ${mv.base} ${obj}.`
+          : `${subj.name} ${subj.be} ${adv.word} ${verbForm} ${obj}.`;
+        return {
+          cat: 'position',
+          badge: '📍 Posizione nella frase',
+          emoji: mv.emoji,
+          prompt: `Dove va l'avverbio <strong>${adv.word}</strong>? Scegli la frase giusta:`,
+          spoken: correct,
+          options: shuffle([
+            { text: correct, isCorrect: true },
+            { text: w1, isCorrect: false },
+            { text: w2, isCorrect: false }
+          ]),
+          explain: `L'avverbio va <strong>PRIMA</strong> del verbo principale${subj.type === '3s' ? ' (e con he/she/it il verbo prende la -s/-es!)' : ''}: <em>${correct}</em>`
+        };
+      }
+    }
+  }
+
+  function genMeaningQuestion() {
+    const useScenario = Math.random() < 0.65;
+    if (useScenario) {
+      const sc = pick(meaningScenarios);
+      return {
+        cat: 'meaning',
+        badge: '📊 Significato & Percentuale',
+        emoji: sc.emoji,
+        prompt: `${sc.en}`,
+        subHint: `Indizio: ${sc.it}`,
+        pct: sc.pct,
+        answer: sc.answer,
+        explain: `${sc.pct}% corrisponde a <strong>${sc.answer}</strong>!`
+      };
+    } else {
+      const adv = pick(adverbs);
+      return {
+        cat: 'meaning',
+        badge: '📊 Scala di Frequenza',
+        emoji: '📊',
+        prompt: `Quale avverbio significa "${adv.clueIt}"?`,
+        subHint: adv.stars,
+        pct: adv.pct,
+        answer: adv.word,
+        explain: `${adv.pct}% (${adv.clueIt}) = <strong>${adv.word}</strong>!`
+      };
+    }
+  }
+
+  function genBuilderQuestion() {
+    const useBe = Math.random() < 0.35;
+    const subj = pick(subjects);
+    const adv = pick(adverbs);
+    let tokens = [];
+    let emoji = '🧩';
+    let full = '';
+
+    if (Math.random() < 0.18) {
+      // Question with How often
+      const mv = pick(mainVerbs.filter(v => !v.obj.includes('{poss}')));
+      tokens = ['How often', 'do', 'you', mv.base, mv.obj + '?'];
+      full = tokens.join(' ');
+      emoji = mv.emoji;
+    } else if (useBe) {
+      const bc = pick(beComps);
+      tokens = [subj.name, subj.be, adv.word, bc.comp + '.'];
+      full = tokens.join(' ');
+      emoji = bc.emoji;
+    } else {
+      const mv = pick(mainVerbs);
+      const obj = resolveObj(mv.obj, subj);
+      const verbForm = subj.type === '3s' ? mv.s3 : mv.base;
+      tokens = [subj.name, adv.word, verbForm, obj + '.'];
+      full = tokens.join(' ');
+      emoji = mv.emoji;
+    }
+
+    return {
+      cat: 'builder',
+      badge: '🧩 Costruisci la Frase',
+      emoji,
+      prompt: 'Tocca i blocchi nell’ordine corretto per formare la frase:',
+      tokens,
+      shuffled: shuffle(tokens.map((t, i) => ({ id: i, text: t }))),
+      answer: full,
+      explain: `Ordine corretto: <em>${full}</em>`
+    };
+  }
+
+  function genGrammarQuestion() {
+    const roll = Math.random();
+    if (roll < 0.5) {
+      // 3rd person + adverb
+      const subj = pick(subjects.filter(s => s.type === '3s'));
+      const mv = pick(mainVerbs);
+      const adv = pick(adverbs);
+      const obj = resolveObj(mv.obj, subj);
+      const correctChunk = `${adv.word} ${mv.s3}`;
+      const w1 = `${adv.word} ${mv.base}`;
+      const w2 = `${mv.s3} ${adv.word}`;
+      return {
+        cat: 'grammar',
+        badge: '🔧 3ª Persona + Avverbio',
+        emoji: mv.emoji,
+        prompt: `Completa: <strong>${subj.name} _______ ${obj}.</strong>`,
+        spoken: `${subj.name} ${correctChunk} ${obj}.`,
+        options: shuffle([
+          { text: correctChunk, isCorrect: true },
+          { text: w1, isCorrect: false },
+          { text: w2, isCorrect: false }
+        ]),
+        explain: `Con <strong>${subj.name}</strong> (3ª persona), l'avverbio va prima del verbo e il verbo vuole <strong>-s/-es</strong>: <em>${correctChunk}</em>!`
+      };
+    } else if (roll < 0.8) {
+      // TO BE vs Verb
+      const subj = pick(subjects);
+      const bc = pick(beComps);
+      const adv = pick(adverbs);
+      const correctChunk = `${subj.be} ${adv.word}`;
+      const w1 = `${adv.word} ${subj.be}`;
+      const wrongBe = subj.be === 'is' ? 'are' : 'is';
+      const w2 = `${wrongBe} ${adv.word}`;
+      return {
+        cat: 'grammar',
+        badge: '🔧 Verbo TO BE + Avverbio',
+        emoji: bc.emoji,
+        prompt: `Completa: <strong>${subj.name} _______ ${bc.comp}.</strong>`,
+        spoken: `${subj.name} ${correctChunk} ${bc.comp}.`,
+        options: shuffle([
+          { text: correctChunk, isCorrect: true },
+          { text: w1, isCorrect: false },
+          { text: w2, isCorrect: false }
+        ]),
+        explain: `Con <strong>${subj.name}</strong> usiamo <strong>${subj.be}</strong>, e l'avverbio va DOPO: <em>${correctChunk}</em>!`
+      };
+    } else {
+      // How often question
+      const mv = pick(mainVerbs.filter(v => !v.obj.includes('{poss}')));
+      const correct = 'How often';
+      return {
+        cat: 'grammar',
+        badge: '🔧 Domande sulla Frequenza',
+        emoji: '❓',
+        prompt: `Completa la domanda: <strong>_______ do you ${mv.base} ${mv.obj}?</strong>`,
+        spoken: `How often do you ${mv.base} ${mv.obj}?`,
+        options: shuffle([
+          { text: 'How often', isCorrect: true },
+          { text: 'How many', isCorrect: false },
+          { text: 'What time', isCorrect: false }
+        ]),
+        explain: `Per chiedere "Quanto spesso...?" in inglese si usa sempre <strong>How often</strong>!`
+      };
+    }
+  }
+
+  function genSpeakingQuestion() {
+    const sp = pick(speakingCards);
+    return {
+      cat: 'speaking',
+      badge: '🗣️ Sfida Speaking al Volo',
+      emoji: sp.emoji,
+      prompt: sp.q,
+      starter: sp.starter
+    };
+  }
+
+  // ==================== GAME STATE ====================
+  let twoTeams = false;
+  let lapMode = true; // true = pausa celebrativa ogni 10 domande (ma infinita!), false = flusso infinito continuo
+  let activeCat = 'all';
+  let currentTurn = 'A'; // 'A' or 'B'
+  let scoreSolo = 0;
+  let scoreA = 0;
+  let scoreB = 0;
+  let streak = 0;
+  let lapNumber = 1;
+  let questionInLap = 0;
+  let totalPlayed = 0;
+  let currentQ = null;
+  let locked = false;
+
+  function renderScoreboard() {
+    const sb = document.getElementById('scoreboard');
+    if (!twoTeams) {
+      sb.innerHTML = `
+        <div class="stat-box turn-a">
+          <div><div class="stat-label">⭐ Punti Totali</div><div class="stat-val">${scoreSolo}</div></div>
+          <div style="font-size:1.8rem;">🏆</div>
+        </div>
+        <div class="stat-box">
+          <div><div class="stat-label">🔥 Serie di fila</div><div class="stat-val">${streak}</div></div>
+          <div style="font-size:1.8rem;">⚡</div>
+        </div>
+        <div class="stat-box">
+          <div><div class="stat-label">♾️ Sfide giocate</div><div class="stat-val">${totalPlayed}</div></div>
+          <div style="font-size:1.8rem;">🎯</div>
+        </div>
+      `;
+    } else {
+      sb.innerHTML = `
+        <div class="stat-box ${currentTurn === 'A' ? 'turn-a' : ''}">
+          <div><div class="stat-label">🔵 Squadra A ${currentTurn === 'A' ? '(Tocca a voi!)' : ''}</div><div class="stat-val" style="color:#1d4ed8;">${scoreA}</div></div>
+          <div style="font-size:1.8rem;">🔵</div>
+        </div>
+        <div class="stat-box ${currentTurn === 'B' ? 'turn-b' : ''}">
+          <div><div class="stat-label">🟢 Squadra B ${currentTurn === 'B' ? '(Tocca a voi!)' : ''}</div><div class="stat-val" style="color:#15803d;">${scoreB}</div></div>
+          <div style="font-size:1.8rem;">🟢</div>
+        </div>
+        <div class="stat-box">
+          <div><div class="stat-label">♾️ Sfide giocate</div><div class="stat-val">${totalPlayed}</div></div>
+          <div style="font-size:1.8rem;">🎯</div>
+        </div>
+      `;
+    }
+
+    const rb = document.getElementById('roundBadge');
+    rb.textContent = lapMode ? `Giro ${lapNumber} · Sfida ${questionInLap + 1}/10` : `Modalità Infinita · Sfida #${totalPlayed + 1}`;
+
+    const tb = document.getElementById('turnBadge');
+    if (!twoTeams) {
+      tb.className = 'turn-badge solo';
+      tb.textContent = streak >= 3 ? `🔥 Super Serie x${streak}!` : 'Sfida Singola';
+    } else {
+      tb.className = 'turn-badge ' + (currentTurn === 'A' ? 'a' : 'b');
+      tb.textContent = currentTurn === 'A' ? '🔵 Turno Squadra A' : '🟢 Turno Squadra B';
+    }
+  }
+
+  function addPoint(pts = 1) {
+    if (!twoTeams) {
+      scoreSolo += pts;
+      streak++;
+    } else {
+      if (currentTurn === 'A') scoreA += pts;
+      else scoreB += pts;
+    }
+  }
+
+  function recordMiss() {
+    if (!twoTeams) streak = 0;
+  }
+
+  function pickNextQuestion() {
+    let cat = activeCat;
+    if (cat === 'all') {
+      const r = Math.random();
+      if (r < 0.30) cat = 'position';
+      else if (r < 0.52) cat = 'meaning';
+      else if (r < 0.74) cat = 'builder';
+      else if (r < 0.92) cat = 'grammar';
+      else cat = 'speaking';
+    }
+    if (cat === 'position') return genPositionQuestion();
+    if (cat === 'meaning') return genMeaningQuestion();
+    if (cat === 'builder') return genBuilderQuestion();
+    if (cat === 'grammar') return genGrammarQuestion();
+    return genSpeakingQuestion();
+  }
+
+  function showFeedback(isOk, htmlText) {
+    const fb = document.getElementById('feedbackArea');
+    fb.className = 'feedback-banner ' + (isOk ? 'ok' : 'err');
+    fb.innerHTML = `
+      <div>${isOk ? '✅ ' : '❌ '}${htmlText}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        ${currentQ.spoken ? `<button id="fbSpeakBtn" class="btn" type="button" style="padding:7px 12px;">🔊 Ascolta</button>` : ''}
+        <button id="nextQBtn" class="btn btn-primary" type="button">Prossima sfida ➡️</button>
+      </div>
+    `;
+    fb.classList.remove('hidden');
+    if (currentQ.spoken) {
+      document.getElementById('fbSpeakBtn').addEventListener('click', () => speakEnglish(currentQ.spoken));
+    }
+    document.getElementById('nextQBtn').addEventListener('click', advanceTurn);
+  }
+
+  function advanceTurn() {
+    totalPlayed++;
+    questionInLap++;
+    if (twoTeams) currentTurn = currentTurn === 'A' ? 'B' : 'A';
+
+    if (lapMode && questionInLap >= 10) {
+      document.getElementById('gameStage').classList.add('hidden');
+      const modal = document.getElementById('lapModal');
+      document.getElementById('lapTitle').textContent = `🎉 Giro ${lapNumber} Completato!`;
+      document.getElementById('lapSubtitle').textContent = twoTeams
+        ? `Punteggio attuale — 🔵 Squadra A: ${scoreA}  |  🟢 Squadra B: ${scoreB}`
+        : `Hai accumulato ${scoreSolo} punti finora! Pronto per un altro giro infinito?`;
+      modal.classList.remove('hidden');
+      renderScoreboard();
+      return;
+    }
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    locked = false;
+    currentQ = pickNextQuestion();
+    document.getElementById('feedbackArea').className = 'hidden';
+    document.getElementById('feedbackArea').innerHTML = '';
+    document.getElementById('typeBadge').textContent = currentQ.badge;
+    renderScoreboard();
+
+    const area = document.getElementById('questionArea');
+    area.innerHTML = '';
+
+    // 1. MULTIPLE CHOICE (position & grammar)
+    if (currentQ.cat === 'position' || currentQ.cat === 'grammar') {
+      const p = document.createElement('div');
+      p.className = 'q-prompt';
+      p.innerHTML = `<span class="q-emoji">${currentQ.emoji}</span><span>${currentQ.prompt}</span>`;
+      area.appendChild(p);
+
+      const list = document.createElement('div');
+      list.className = 'options-list';
+      list.style.marginTop = '12px';
+
+      currentQ.options.forEach((opt, idx) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'opt-btn';
+        b.innerHTML = `<span>${['A', 'B', 'C'][idx]}. ${opt.text}</span><span></span>`;
+        b.addEventListener('click', () => {
+          if (locked) return;
+          locked = true;
+          const allBtns = list.querySelectorAll('.opt-btn');
+          allBtns.forEach((btn, i) => {
+            btn.disabled = true;
+            if (currentQ.options[i].isCorrect) {
+              btn.classList.add('correct');
+              btn.lastElementChild.textContent = '✅';
+            }
+          });
+          if (opt.isCorrect) {
+            playTone('ok');
+            addPoint(1);
+            renderScoreboard();
+            showFeedback(true, `Bravissimo! ${currentQ.explain}`);
+          } else {
+            b.classList.add('wrong');
+            b.lastElementChild.textContent = '❌';
+            playTone('err');
+            recordMiss();
+            renderScoreboard();
+            showFeedback(false, `Quasi! ${currentQ.explain}`);
+          }
+        });
+        list.appendChild(b);
+      });
+      area.appendChild(list);
+    }
+
+    // 2. MEANING / PERCENTAGE
+    else if (currentQ.cat === 'meaning') {
+      const p = document.createElement('div');
+      p.className = 'q-prompt';
+      p.innerHTML = `<span class="q-emoji">${currentQ.emoji}</span><span>${currentQ.prompt}</span>`;
+      area.appendChild(p);
+
+      const pctCard = document.createElement('div');
+      pctCard.className = 'pct-card';
+      pctCard.style.margin = '12px 0';
+      pctCard.innerHTML = `
+        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.95rem;">
+          <span>${currentQ.subHint}</span>
+          <span>${currentQ.pct}%</span>
+        </div>
+        <div class="pct-track"><div class="pct-fill" style="width:${currentQ.pct}%"></div></div>
+      `;
+      area.appendChild(pctCard);
+
+      const grid = document.createElement('div');
+      grid.className = 'adv-btn-grid';
+      adverbs.forEach(adv => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'adv-choice';
+        b.textContent = adv.word;
+        b.addEventListener('click', () => {
+          if (locked) return;
+          locked = true;
+          grid.querySelectorAll('.adv-choice').forEach(btn => {
+            btn.disabled = true;
+            if (btn.textContent === currentQ.answer) btn.classList.add('correct');
+          });
+          if (adv.word === currentQ.answer) {
+            playTone('ok');
+            addPoint(1);
+            renderScoreboard();
+            showFeedback(true, `Esatto! ${currentQ.explain}`);
+          } else {
+            b.classList.add('wrong');
+            playTone('err');
+            recordMiss();
+            renderScoreboard();
+            showFeedback(false, `Non proprio! ${currentQ.explain}`);
+          }
+        });
+        grid.appendChild(b);
+      });
+      area.appendChild(grid);
+    }
+
+    // 3. SENTENCE BUILDER
+    else if (currentQ.cat === 'builder') {
+      const p = document.createElement('div');
+      p.className = 'q-prompt';
+      p.innerHTML = `<span class="q-emoji">${currentQ.emoji}</span><span>${currentQ.prompt}</span>`;
+      area.appendChild(p);
+
+      const drop = document.createElement('div');
+      drop.className = 'drop-zone';
+      drop.style.marginTop = '12px';
+      const bank = document.createElement('div');
+      bank.className = 'word-bank';
+
+      const selected = [];
+      const available = currentQ.shuffled.slice();
+
+      function renderBuilder() {
+        drop.innerHTML = '';
+        if (!selected.length) {
+          drop.innerHTML = '<span style="color:var(--muted); font-weight:700; font-size:0.92rem;">Tocca le parole qui sotto...</span>';
+        } else {
+          selected.forEach((tok, idx) => {
+            const c = document.createElement('button');
+            c.type = 'button';
+            c.className = 'w-chip placed';
+            c.textContent = tok.text;
+            c.addEventListener('click', () => {
+              if (locked) return;
+              selected.splice(idx, 1);
+              available.push(tok);
+              renderBuilder();
+            });
+            drop.appendChild(c);
+          });
+        }
+        bank.innerHTML = '';
+        available.forEach((tok, idx) => {
+          const c = document.createElement('button');
+          c.type = 'button';
+          c.className = 'w-chip';
+          c.textContent = tok.text;
+          c.addEventListener('click', () => {
+            if (locked) return;
+            available.splice(idx, 1);
+            selected.push(tok);
+            renderBuilder();
+          });
+          bank.appendChild(c);
+        });
+      }
+
+      const actions = document.createElement('div');
+      actions.style.cssText = 'display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;';
+      const checkB = document.createElement('button');
+      checkB.type = 'button';
+      checkB.className = 'btn btn-primary';
+      checkB.textContent = '✅ Controlla Frase';
+      checkB.addEventListener('click', () => {
+        if (locked) return;
+        const built = selected.map(t => t.text).join(' ');
+        if (!selected.length) return;
+        locked = true;
+        currentQ.spoken = currentQ.answer;
+        if (built === currentQ.answer) {
+          drop.classList.add('correct');
+          playTone('ok');
+          addPoint(2);
+          renderScoreboard();
+          showFeedback(true, `Perfetto (+2 punti)! ${currentQ.explain}`);
+        } else {
+          drop.classList.add('wrong');
+          playTone('err');
+          recordMiss();
+          renderScoreboard();
+          showFeedback(false, `Attento all'ordine! ${currentQ.explain}`);
+        }
+      });
+
+      const clearB = document.createElement('button');
+      clearB.type = 'button';
+      clearB.className = 'btn';
+      clearB.textContent = '↩️ Ricomincia frase';
+      clearB.addEventListener('click', () => {
+        if (locked) return;
+        selected.length = 0;
+        available.length = 0;
+        currentQ.shuffled.forEach(x => available.push(x));
+        renderBuilder();
+      });
+
+      actions.appendChild(checkB);
+      actions.appendChild(clearB);
+
+      area.appendChild(drop);
+      area.appendChild(bank);
+      area.appendChild(actions);
+      renderBuilder();
+    }
+
+    // 4. SPEAKING BONUS
+    else if (currentQ.cat === 'speaking') {
+      const box = document.createElement('div');
+      box.className = 'speaking-box';
+      box.innerHTML = `
+        <div class="q-prompt"><span class="q-emoji">${currentQ.emoji}</span><span>${currentQ.prompt}</span></div>
+        <div style="font-size:1rem; font-weight:700; color:#4c1d95;">Aiuto per rispondere ad alta voce: <em>"${currentQ.starter}"</em></div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+          <button id="spListenBtn" class="btn" type="button">🔊 Ascolta domanda</button>
+          <button id="spPassBtn" class="btn btn-green" type="button">🗣️ Risposto bene in inglese! (+2 punti)</button>
+          <button id="spSkipBtn" class="btn" type="button">⏭️ Cambia domanda</button>
+        </div>
+      `;
+      area.appendChild(box);
+      document.getElementById('spListenBtn').addEventListener('click', () => speakEnglish(currentQ.prompt));
+      document.getElementById('spPassBtn').addEventListener('click', () => {
+        if (locked) return;
+        locked = true;
+        playTone('ok');
+        addPoint(2);
+        renderScoreboard();
+        showFeedback(true, 'Great speaking! (+2 punti)');
+      });
+      document.getElementById('spSkipBtn').addEventListener('click', () => {
+        if (!locked) loadQuestion();
+      });
+    }
+  }
+
+  // ==================== UI LISTENERS ====================
+  document.getElementById('modePlayersBtn').addEventListener('click', function () {
+    twoTeams = !twoTeams;
+    this.textContent = twoTeams ? '👥 2 Squadre: ON' : '👥 2 Squadre: OFF';
+    this.classList.toggle('active', twoTeams);
+    renderScoreboard();
+  });
+
+  document.getElementById('lapModeBtn').addEventListener('click', function () {
+    lapMode = !lapMode;
+    this.textContent = lapMode ? '🏁 Giri da 10' : '♾️ Flusso Continuo';
+    renderScoreboard();
+  });
+
+  document.getElementById('soundBtn').addEventListener('click', function () {
+    soundOn = !soundOn;
+    window.soundEnabled = soundOn;
+    this.textContent = soundOn ? '🔊 Suoni ON' : '🔇 Suoni OFF';
+    this.classList.toggle('active', soundOn);
+    if (typeof setSpeechEnabled === 'function') setSpeechEnabled(soundOn);
+    if (!soundOn && typeof stopSpeech === 'function') stopSpeech();
+  });
+
+  const helpPanel = document.getElementById('helpPanel');
+  document.getElementById('helpBtn').addEventListener('click', () => helpPanel.classList.toggle('hidden'));
+  document.getElementById('closeHelpBtn').addEventListener('click', () => helpPanel.classList.add('hidden'));
+
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(x => x.classList.remove('on'));
+      p.classList.add('on');
+      activeCat = p.dataset.cat;
+      loadQuestion();
+    });
+  });
+
+  document.getElementById('nextLapBtn').addEventListener('click', () => {
+    lapNumber++;
+    questionInLap = 0;
+    document.getElementById('lapModal').classList.add('hidden');
+    document.getElementById('gameStage').classList.remove('hidden');
+    loadQuestion();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    scoreSolo = 0; scoreA = 0; scoreB = 0; streak = 0;
+    lapNumber = 1; questionInLap = 0; totalPlayed = 0; currentTurn = 'A';
+    document.getElementById('lapModal').classList.add('hidden');
+    document.getElementById('gameStage').classList.remove('hidden');
+    loadQuestion();
+  });
+
+  // START!
+  loadQuestion();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Days of the Week 🌟</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
@@ -13,7 +13,7 @@
       --thu: #69DB7C; --fri: #4DABF7; --sat: #9775FA; --sun: #F783AC;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
     body {
       font-family: 'Nunito', sans-serif;
@@ -606,19 +606,19 @@
 //  DATA
 // ═══════════════════════════════════════════════════════════
 const DAYS = [
-  { name:"Monday",    abbr:"MON", ita:"Lunedì",    emoji:"🌙", color:"var(--mon)", num:1,
+  { name:"Monday",    abbr:"MON", ita:"Lunedì",    emoji:"🌙", color:"#FF6B6B", num:1,
     fun:"Monday comes from 'Moon's day' 🌙" },
-  { name:"Tuesday",   abbr:"TUE", ita:"Martedì",   emoji:"🔴", color:"var(--tue)", num:2,
+  { name:"Tuesday",   abbr:"TUE", ita:"Martedì",   emoji:"🔴", color:"#FFA94D", num:2,
     fun:"Tuesday comes from Tiw, the god of war ⚔️" },
-  { name:"Wednesday", abbr:"WED", ita:"Mercoledì", emoji:"🌊", color:"var(--wed)", num:3,
+  { name:"Wednesday", abbr:"WED", ita:"Mercoledì", emoji:"🌊", color:"#F59F00", num:3,
     fun:"Wednesday comes from Woden, king of gods 👑" },
-  { name:"Thursday",  abbr:"THU", ita:"Giovedì",   emoji:"⚡", color:"var(--thu)", num:4,
+  { name:"Thursday",  abbr:"THU", ita:"Giovedì",   emoji:"⚡", color:"#51CF66", num:4,
     fun:"Thursday = Thor's day! The thunder god ⚡" },
-  { name:"Friday",    abbr:"FRI", ita:"Venerdì",   emoji:"🌟", color:"var(--fri)", num:5,
+  { name:"Friday",    abbr:"FRI", ita:"Venerdì",   emoji:"🌟", color:"#339AF0", num:5,
     fun:"Friday comes from Frigg, goddess of love 💙" },
-  { name:"Saturday",  abbr:"SAT", ita:"Sabato",    emoji:"🪐", color:"var(--sat)", num:6,
+  { name:"Saturday",  abbr:"SAT", ita:"Sabato",    emoji:"🪐", color:"#845EF7", num:6,
     fun:"Saturday = Saturn's day, a Roman god 🪐" },
-  { name:"Sunday",    abbr:"SUN", ita:"Domenica",  emoji:"☀️", color:"var(--sun)", num:7,
+  { name:"Sunday",    abbr:"SUN", ita:"Domenica",  emoji:"☀️", color:"#F06595", num:7,
     fun:"Sunday = Sun's day! Shine bright ☀️" }
 ];
 
@@ -881,10 +881,10 @@ function resetOrder() { initOrder(); }
 // ═══════════════════════════════════════════════════════════
 //  MATCH
 // ═══════════════════════════════════════════════════════════
-let matchSelected = null, matchMatched = 0;
+let matchSelected = null, matchMatched = 0, matchBusy = false;
 
 function initMatch() {
-  matchSelected = null; matchMatched = 0;
+  matchSelected = null; matchMatched = 0; matchBusy = false;
   document.getElementById('m-score').textContent = '0';
   document.getElementById('m-progress').style.width = '0%';
   document.getElementById('match-result').textContent = '';
@@ -913,7 +913,7 @@ function initMatch() {
 }
 
 function handleMatch(el, card) {
-  if (el.classList.contains('matched')) return;
+  if (matchBusy || el.classList.contains('matched')) return;
 
   if (!matchSelected) {
     el.classList.add('selected');
@@ -947,11 +947,13 @@ function handleMatch(el, card) {
     matchSelected = null;
   } else {
     // ❌ Wrong
+    matchBusy = true;
     [matchSelected.el, el].forEach(e => e.classList.add('wrong-shake'));
     setTimeout(() => {
       matchSelected && matchSelected.el.classList.remove('selected','wrong-shake');
       el.classList.remove('wrong-shake');
       matchSelected = null;
+      matchBusy = false;
     }, 500);
   }
 }

@@ -66,13 +66,19 @@
         </div>
 
         <!-- TEAM SCOREBOARD -->
-        <div class="flex gap-4">
-            <button onclick="addScore('A')" class="flex items-center gap-3 px-6 py-2 bg-rose-500 text-white rounded-2xl font-bold text-2xl btn-hover shadow-lg border-b-4 border-rose-700 cursor-pointer">
-                TEAM A <span id="scoreA" class="bg-white text-rose-600 px-3 py-0.5 rounded-xl shadow-inner">0</span>
-            </button>
-            <button onclick="addScore('B')" class="flex items-center gap-3 px-6 py-2 bg-blue-500 text-white rounded-2xl font-bold text-2xl btn-hover shadow-lg border-b-4 border-blue-700 cursor-pointer">
-                TEAM B <span id="scoreB" class="bg-white text-blue-600 px-3 py-0.5 rounded-xl shadow-inner">0</span>
-            </button>
+        <div class="flex gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-rose-500 text-white rounded-2xl font-bold text-xl md:text-2xl shadow-lg border-b-4 border-rose-700">
+                <span>TEAM A</span>
+                <button onclick="addScore('A', -1)" class="bg-rose-700/70 hover:bg-rose-800 text-white w-8 h-8 rounded-lg text-xl font-bold flex items-center justify-center cursor-pointer">-</button>
+                <span id="scoreA" class="bg-white text-rose-600 px-3 py-0.5 rounded-xl shadow-inner min-w-[2.5rem] text-center">0</span>
+                <button onclick="addScore('A', 1)" class="bg-white/25 hover:bg-white/40 text-white w-8 h-8 rounded-lg text-xl font-bold flex items-center justify-center cursor-pointer">+</button>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white rounded-2xl font-bold text-xl md:text-2xl shadow-lg border-b-4 border-blue-700">
+                <span>TEAM B</span>
+                <button onclick="addScore('B', -1)" class="bg-blue-700/70 hover:bg-blue-800 text-white w-8 h-8 rounded-lg text-xl font-bold flex items-center justify-center cursor-pointer">-</button>
+                <span id="scoreB" class="bg-white text-blue-600 px-3 py-0.5 rounded-xl shadow-inner min-w-[2.5rem] text-center">0</span>
+                <button onclick="addScore('B', 1)" class="bg-white/25 hover:bg-white/40 text-white w-8 h-8 rounded-lg text-xl font-bold flex items-center justify-center cursor-pointer">+</button>
+            </div>
         </div>
     </header>
 
@@ -134,17 +140,17 @@
         let teamAScore = 0;
         let teamBScore = 0;
 
-        function addScore(team) {
+        function addScore(team, delta = 1) {
             if (team === 'A') {
-                teamAScore++;
+                teamAScore = Math.max(0, teamAScore + delta);
                 document.getElementById('scoreA').innerText = teamAScore;
                 animateScore('scoreA');
-                confetti({ particleCount: 50, spread: 60, origin: { x: 0.2, y: 0.1 }, colors: ['#f43f5e', '#ffffff'] });
+                if (delta > 0) confetti({ particleCount: 50, spread: 60, origin: { x: 0.2, y: 0.1 }, colors: ['#f43f5e', '#ffffff'] });
             } else {
-                teamBScore++;
+                teamBScore = Math.max(0, teamBScore + delta);
                 document.getElementById('scoreB').innerText = teamBScore;
                 animateScore('scoreB');
-                confetti({ particleCount: 50, spread: 60, origin: { x: 0.8, y: 0.1 }, colors: ['#3b82f6', '#ffffff'] });
+                if (delta > 0) confetti({ particleCount: 50, spread: 60, origin: { x: 0.8, y: 0.1 }, colors: ['#3b82f6', '#ffffff'] });
             }
         }
 
@@ -191,6 +197,14 @@
             { it: "Piedi", en: "Feet", missing: "F _ E T", ans: "E" }
         ];
 
+        let vocabQueue = [];
+        function nextVocabItem() {
+            if (vocabQueue.length === 0) {
+                vocabQueue = [...bodyVocab].sort(() => Math.random() - 0.5);
+            }
+            return vocabQueue.pop();
+        }
+
         function generateQuestion() {
             document.getElementById('nextBtnContainer').classList.add('hidden');
             const optionsArea = document.getElementById('optionsArea');
@@ -201,8 +215,8 @@
             void questionEl.offsetWidth;
             questionEl.classList.add('pop-in');
 
-            // Pick a random word from the 10 targets
-            const targetItem = bodyVocab[Math.floor(Math.random() * bodyVocab.length)];
+            // Pick a non-repeating word from the 10 targets
+            const targetItem = nextVocabItem();
 
             if (currentGameMode === 1) {
                 // GAME 1: WORD MATCH (Italian to English)

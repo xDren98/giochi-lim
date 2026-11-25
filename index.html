@@ -424,7 +424,7 @@
             </div>
         </div>
         <div class="header-actions">
-            <div class="badge-count" id="totalGamesBadge">🎮 10 Giochi Pronti</div>
+            <div class="badge-count" id="totalGamesBadge">🎮 13 Giochi Pronti</div>
             <button class="btn-fullscreen" id="btnFs" onclick="toggleFullScreen()" title="Ingrandisci per la LIM">
                 <span>⛶</span> Schermo Intero
             </button>
@@ -436,22 +436,22 @@
         <!-- TASTI FILTRO CLASSI -->
         <div class="class-filters" id="classFilters">
             <button class="filter-btn active" onclick="setFilter('all', this)">
-                🌈 Tutte le Classi <span class="btn-count">8</span>
+                🌈 Tutte le Classi <span class="btn-count" data-count-for="all">13</span>
             </button>
             <button class="filter-btn" onclick="setFilter('1', this)">
-                ⭐ Classe 1ª <span class="btn-count">1</span>
+                ⭐ Classe 1ª <span class="btn-count" data-count-for="1">3</span>
             </button>
             <button class="filter-btn" onclick="setFilter('2', this)">
-                🚀 Classe 2ª <span class="btn-count">3</span>
+                🚀 Classe 2ª <span class="btn-count" data-count-for="2">4</span>
             </button>
             <button class="filter-btn" onclick="setFilter('3', this)">
-                📅 Classe 3ª <span class="btn-count">1</span>
+                📅 Classe 3ª <span class="btn-count" data-count-for="3">1</span>
             </button>
             <button class="filter-btn" onclick="setFilter('4', this)">
-                🔬 Classe 4ª <span class="btn-count">2</span>
+                🔬 Classe 4ª <span class="btn-count" data-count-for="4">2</span>
             </button>
             <button class="filter-btn" onclick="setFilter('5', this)">
-                📚 Classe 5ª <span class="btn-count">1</span>
+                📚 Classe 5ª <span class="btn-count" data-count-for="5">3</span>
             </button>
         </div>
 
@@ -491,13 +491,28 @@
                 classeColor: "#ff9800",
                 title: "Magic Shapes",
                 subtitle: "Forme Geometriche & Pronuncia",
-                desc: "Circle, Square, Triangle, Rectangle e Star! Tocca e ascolta la pronuncia in inglese, disegna le forme e mettiti alla prova con quiz e memory alla LIM.",
+                desc: "Circle, Square, Rectangle e Star! Tocca e ascolta la pronuncia in inglese, costruisci il robot delle forme e mettiti alla prova alla LIM.",
                 emoji: "⭐",
                 color: "#ff9800",
                 bgGradient: "linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)",
                 tag: "Geometria & Inglese",
                 btnText: "▶ Gioca con le Forme",
                 file: "games/gioco_LIM_forme_geometriche.html"
+            },
+            {
+                id: "froggy-space",
+                classe: "1",
+                classeLabel: "Classe 1ª",
+                classeColor: "#10b981",
+                title: "Froggy's Space Adventure",
+                subtitle: "In/Out • Left/Right • Front/Back",
+                desc: "Aiuta la ranocchia Froggy con le 3 coppie spaziali base: Dentro/Fuori (In/Out), Destra/Sinistra (Left/Right) e Avanti/Dietro (Front/Back) con audio inglese!",
+                emoji: "🐸",
+                color: "#10b981",
+                bgGradient: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+                tag: "Orientamento Base",
+                btnText: "▶ Gioca con Froggy",
+                file: "games/gioco_LIM_froggy_space.html"
             },
             {
                 id: "spatial-indicators",
@@ -596,7 +611,7 @@
                 classeColor: "#f97316",
                 title: "Ninja Cat Prepositions",
                 subtitle: "Where is the Cat? • Preposizioni di Luogo",
-                desc: "Divertente gioco a squadre (Team A vs Team B) con segnapunti per la LIM! Scopri dove si nasconde il gatto ninja (in, on, under, behind, in front of, between, next to) e tocca la risposta esatta.",
+                desc: "Divertente gioco a squadre (Team A vs Team B) con segnapunti per la LIM! Scopri dove si nasconde il gatto ninja (in, on, under, behind, in front of, next to) e tocca la risposta esatta.",
                 emoji: "🐱",
                 color: "#ea580c",
                 bgGradient: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
@@ -633,8 +648,49 @@
                 tag: "Materie Scolastiche",
                 btnText: "▶ Sfida le Materie",
                 file: "games/gioco_LIM_school_subjects.html"
+            },
+            {
+                id: "daily-routine-invalsi",
+                classe: "5",
+                classeLabel: "Classe 5ª",
+                classeColor: "#4338ca",
+                title: "A Day in English! — INVALSI",
+                subtitle: "Daily Routine & Adverbs of Frequency",
+                desc: "Percorso completo in stile prove INVALSI: Warm-up, Reading (Leo's Busy Day), Listening con audio (Emma's Week), Writing Lab e Speaking Arena!",
+                emoji: "🇬🇧",
+                color: "#4338ca",
+                bgGradient: "linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)",
+                tag: "INVALSI • 4 Abilità",
+                btnText: "▶ Inizia Missione INVALSI",
+                file: "games/gioco_LIM_daily_routine_invalsi.html"
+            },
+            {
+                id: "frequency-quest-infinito",
+                classe: "5",
+                classeLabel: "Classe 5ª",
+                classeColor: "#7c3aed",
+                title: "Frequency Quest! (Infinito)",
+                subtitle: "Avverbi di Frequenza • Gioco a Squadre",
+                desc: "Sfida procedurale infinita per la LIM (1 giocatore o Squadra A vs Squadra B): posizione nella frase, percentuali, costruzione frasi, 3ª persona e Speaking!",
+                emoji: "♾️",
+                color: "#7c3aed",
+                bgGradient: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",
+                tag: "Gioco Infinito • Squadre",
+                btnText: "▶ Avvia Frequency Quest",
+                file: "games/gioco_LIM_avverbi_frequenza_infinito.html"
             }
         ];
+
+        function updateCounts() {
+            const totalBadge = document.getElementById('totalGamesBadge');
+            if (totalBadge) totalBadge.textContent = `🎮 ${GIOCHI.length} Giochi Pronti`;
+            document.querySelectorAll('[data-count-for]').forEach(el => {
+                const key = el.getAttribute('data-count-for');
+                el.textContent = key === 'all'
+                    ? GIOCHI.length
+                    : GIOCHI.filter(g => g.classe === key).length;
+            });
+        }
 
         let currentFilter = 'all';
 
@@ -719,6 +775,7 @@
         }
 
         // AVVIO AL CARICAMENTO
+        updateCounts();
         filterGames();
     </script>
 </body>

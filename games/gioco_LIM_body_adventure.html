@@ -941,9 +941,8 @@
             soundEnabled = !soundEnabled;
             soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
             btnSoundToggle.innerHTML = soundEnabled ? '<span>🔊</span> Audio ON' : '<span>🔇</span> Audio OFF';
-            if (!soundEnabled && 'speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
+            if (typeof setSpeechEnabled === 'function') setSpeechEnabled(soundEnabled);
+            if (!soundEnabled && typeof stopSpeech === 'function') stopSpeech();
         });
 
         /* ==================== CONFETTI EFFECT ==================== */
@@ -1045,12 +1044,14 @@
         let simonScore = 0;
         let currentTargetPart = null;
         let simonPool = [];
+        let simonLocked = false;
 
         function initSimonPool() {
             simonPool = [...bodyPartsList].sort(() => Math.random() - 0.5);
         }
 
         function askSimonQuestion() {
+            simonLocked = false;
             if (simonPool.length === 0) initSimonPool();
             currentTargetPart = simonPool.pop();
 
@@ -1079,10 +1080,11 @@
                 const part = zone.dataset.part;
                 const partName = zone.dataset.name || part;
 
-                if (!currentTargetPart) return;
+                if (!currentTargetPart || simonLocked) return;
 
                 if (part === currentTargetPart.key) {
                     // CORRECT!
+                    simonLocked = true;
                     playCorrectSound();
                     zone.classList.add('hit-highlight');
                     setTimeout(() => zone.classList.remove('hit-highlight'), 600);

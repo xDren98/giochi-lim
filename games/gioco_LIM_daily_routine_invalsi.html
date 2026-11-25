@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta name="referrer" content="no-referrer">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>🇬🇧 A Day in English! — Missione INVALSI (5ª Primaria)</title>
+<script src="educational-speech.js?v=3.0"></script>
+<style>
+  :root {
+    --blue: #1d4ed8;
+    --indigo: #4338ca;
+    --indigo-light: #eef2ff;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --amber: #d97706;
+    --amber-bg: #fef3c7;
+    --slate: #0f172a;
+    --muted: #475569;
+    --border: #cbd5e1;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  body {
+    margin: 0;
+    padding: 14px 16px 28px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #dbeafe 0%, #f0fdf4 50%, #fef3c7 100%);
+    min-height: 100vh;
+    color: var(--slate);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrap { width: 100%; max-width: 1080px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* HEADER */
+  header {
+    background: #fff;
+    border-radius: 22px;
+    padding: 16px 22px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .header-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  h1 { margin: 0; font-size: clamp(1.3rem, 2.5vw, 1.95rem); color: var(--indigo); }
+  .sub-h { margin: 3px 0 0; font-size: 0.92rem; color: var(--muted); font-weight: 600; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    border: 2px solid var(--border);
+    background: #fff;
+    color: var(--slate);
+    border-radius: 14px;
+    padding: 9px 15px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.12s, background 0.15s, box-shadow 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: #f8fafc; }
+  .btn:active { transform: scale(0.95); }
+  .btn-primary {
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    color: #fff;
+    border-color: #4338ca;
+    box-shadow: 0 4px 12px rgba(67, 56, 202, 0.25);
+  }
+  .btn-primary:hover { background: linear-gradient(135deg, #3730a3, #4f46e5); }
+  .btn-green {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: #fff;
+    border-color: #15803d;
+  }
+  .btn-amber {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    color: #fff;
+    border-color: #d97706;
+  }
+
+  .score-pill {
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    color: #fff;
+    border-radius: 14px;
+    padding: 9px 16px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* PROGRESS */
+  .progress-wrap { display: flex; flex-direction: column; gap: 5px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); font-weight: 700; }
+  .progress-track { width: 100%; height: 12px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4338ca, #10b981); transition: width 0.35s ease; }
+
+  /* TABS */
+  nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 8px;
+  }
+  .tab {
+    background: #fff;
+    border: 3px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.18s;
+    color: #334155;
+  }
+  .tab:hover { background: #f8fafc; border-color: #94a3b8; }
+  .tab.on {
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    color: #fff;
+    border-color: #818cf8;
+    box-shadow: 0 6px 16px rgba(67, 56, 202, 0.28);
+  }
+  .tab-title { font-weight: 800; font-size: 0.95rem; }
+  .tab-sub { font-size: 0.78rem; opacity: 0.85; margin-top: 2px; font-weight: 600; }
+
+  /* PANELS */
+  .panel {
+    display: none;
+    background: #fff;
+    border-radius: 24px;
+    padding: 20px 22px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    flex-direction: column;
+    gap: 16px;
+  }
+  .panel.on { display: flex; }
+  .panel-h { margin: 0; font-size: 1.3rem; color: var(--indigo); }
+  .panel-desc { margin: 4px 0 0; font-size: 0.95rem; color: var(--muted); }
+
+  .card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 14px 16px;
+  }
+  .card.ok { border-color: #22c55e; background: #f0fdf4; }
+  .card.err { border-color: #ef4444; background: #fef2f2; }
+
+  .hidden { display: none !important; }
+
+  /* RIPASSO DRAWER */
+  .adverb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .adv-box {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 14px;
+    padding: 10px 12px;
+  }
+  .adv-word { font-size: 1.08rem; font-weight: 800; color: var(--indigo); }
+  .adv-it { font-size: 0.84rem; color: var(--muted); font-weight: 600; }
+  .rule-box {
+    background: #eef2ff;
+    border: 2px solid #a5b4fc;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  /* FORM CONTROLS */
+  select, input[type="text"], textarea {
+    font-family: inherit;
+    font-size: 0.95rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 8px 12px;
+    background: #fff;
+    color: var(--slate);
+    font-weight: 600;
+  }
+  select:focus, input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--indigo); }
+  textarea { width: 100%; line-height: 1.5; resize: vertical; }
+
+  .opt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 8px; }
+  .opt-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .opt-label:hover { border-color: #6366f1; background: #eef2ff; }
+  .opt-label input { accent-color: var(--indigo); width: 17px; height: 17px; cursor: pointer; }
+
+  /* READING TEXT */
+  .story-box {
+    background: #fffbeb;
+    border: 2px solid #fcd34d;
+    border-radius: 18px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .story-box p { margin: 0 0 10px; }
+  .story-box p:last-child { margin-bottom: 0; }
+  .ex-badge {
+    background: #eef2ff;
+    border: 1px dashed #818cf8;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    color: #3730a3;
+    font-weight: 600;
+  }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th, td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; }
+  th { text-align: left; color: var(--indigo); font-weight: 800; }
+  td.center, th.center { text-align: center; }
+  input[type="radio"] { accent-color: var(--indigo); width: 18px; height: 18px; cursor: pointer; }
+
+  /* WORD ORDER CHIPS */
+  .wo-answer {
+    min-height: 46px;
+    padding: 8px;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .wo-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip {
+    padding: 7px 13px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid #cbd5e1;
+    background: #fff;
+    transition: transform 0.1s;
+  }
+  .chip:active { transform: scale(0.94); }
+  .chip.placed { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+  /* SPEAKING WHEEL */
+  .wheel-stage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    background: linear-gradient(135deg, #ede9fe, #e0e7ff);
+    border: 3px solid #7c3aed;
+    border-radius: 22px;
+    padding: 18px;
+  }
+  .wheel-btn {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    color: #fff;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+    flex-shrink: 0;
+  }
+  .wheel-btn:active { transform: scale(0.95); }
+  @keyframes spinOnce { 0% { transform: rotate(0deg); } 100% { transform: rotate(720deg); } }
+  .spinning { animation: spinOnce 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  .prompt-card {
+    flex: 1;
+    min-width: 240px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    border: 2px solid #c4b5fd;
+  }
+  .prompt-q { font-size: 1.15rem; font-weight: 800; color: #4c1d95; margin: 4px 0 6px; }
+
+  .footer-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 2px solid #f1f5f9;
+  }
+  .feedback { font-size: 0.98rem; font-weight: 800; }
+
+  /* DIPLOMA */
+  .diploma-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .dip-card {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+  }
+  .dip-score { font-size: 1.5rem; font-weight: 900; color: var(--indigo); margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>🇬🇧 A Day in English! — Missione INVALSI</h1>
+        <p class="sub-h">Classe Quinta · Avverbi di frequenza &amp; Daily Routine · Reading, Listening, Writing, Speaking</p>
+      </div>
+      <div class="header-actions">
+        <a href="../index.html" class="btn" style="text-decoration:none; background:#fff3e0; border-color:#ff9800; color:#e65100;" title="Torna all'Hub Giochi">🏠 Menu Giochi</a>
+        <button id="toggleHelpBtn" class="btn" type="button">📌 Ripasso Avverbi</button>
+        <div class="score-pill">⭐ <span id="totalScoreDisplay">0</span> / 25</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span>Progresso della giornata</span>
+        <span id="progressLabel">0% completato</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <nav>
+      <button class="tab on" data-tab="warmup" type="button">
+        <div class="tab-title">1. ☀️ Warm-up</div>
+        <div class="tab-sub" id="badge-warmup">0/5 ⭐</div>
+      </button>
+      <button class="tab" data-tab="reading" type="button">
+        <div class="tab-title">2. 📖 Reading</div>
+        <div class="tab-sub" id="badge-reading">0/8 ⭐</div>
+      </button>
+      <button class="tab" data-tab="listening" type="button">
+        <div class="tab-title">3. 🎧 Listening</div>
+        <div class="tab-sub" id="badge-listening">0/5 ⭐</div>
+      </button>
+      <button class="tab" data-tab="writing" type="button">
+        <div class="tab-title">4. ✍️ Writing</div>
+        <div class="tab-sub" id="badge-writing">0/7 ⭐</div>
+      </button>
+      <button class="tab" data-tab="speaking" type="button">
+        <div class="tab-title">5. 🗣️ Speaking</div>
+        <div class="tab-sub" id="badge-speaking">Gioca alla LIM!</div>
+      </button>
+      <button class="tab" data-tab="diploma" type="button">
+        <div class="tab-title">6. 🏆 Risultato</div>
+        <div class="tab-sub">Diploma finale</div>
+      </button>
+    </nav>
+  </header>
+
+  <!-- RIPASSO COLLAPSIBLE -->
+  <section id="helpPanel" class="panel hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <h2 class="panel-h">📌 Ripasso Veloce: Adverbs of Frequency</h2>
+      <button id="closeHelpBtn" class="btn" type="button">Chiudi ✖</button>
+    </div>
+    <div class="adverb-grid">
+      <div class="adv-box"><div class="adv-word">always</div><div class="adv-it">100% · sempre</div><div>⭐⭐⭐⭐⭐</div></div>
+      <div class="adv-box"><div class="adv-word">usually</div><div class="adv-it">80% · di solito</div><div>⭐⭐⭐⭐☆</div></div>
+      <div class="adv-box"><div class="adv-word">often</div><div class="adv-it">60% · spesso</div><div>⭐⭐⭐☆☆</div></div>
+      <div class="adv-box"><div class="adv-word">sometimes</div><div class="adv-it">40% · a volte</div><div>⭐⭐☆☆☆</div></div>
+      <div class="adv-box"><div class="adv-word">never</div><div class="adv-it">0% · mai</div><div>☆☆☆☆☆</div></div>
+    </div>
+    <div class="rule-box">
+      <strong>Regola d'oro della posizione:</strong><br>
+      1. <strong>PRIMA</strong> del verbo principale → <em>I <strong>always</strong> brush my teeth.</em> / <em>She <strong>never</strong> drinks coffee.</em><br>
+      2. <strong>DOPO</strong> il verbo <strong>to be</strong> (am / is / are) → <em>We are <strong>never</strong> late!</em> / <em>He is <strong>usually</strong> happy.</em>
+    </div>
+  </section>
+
+  <!-- ==================== 1. WARM-UP ==================== -->
+  <section id="tab-warmup" class="panel on">
+    <div>
+      <h2 class="panel-h">☀️ Tappa 1: Frequency Meter &amp; Posizione</h2>
+      <p class="panel-desc">Abbina gli avverbi alle percentuali (3 punti) e risolvi i 2 quiz sulla posizione nella frase!</p>
+    </div>
+
+    <div id="warmupMeterContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+    <div style="border-top:2px solid #f1f5f9; padding-top:12px;">
+      <h3 style="margin:0 0 10px; font-size:1.05rem;">Dove si mette l'avverbio? Scegli la frase corretta:</h3>
+      <div id="warmupPosContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div class="footer-bar">
+      <button id="checkWarmupBtn" class="btn btn-primary" type="button">✅ Controlla Tappa 1</button>
+      <span id="warmupFeedback" class="feedback"></span>
+      <button class="btn next-btn" data-next="reading" type="button">Vai al Reading ➡️</button>
+    </div>
+  </section>
+
+  <!-- ==================== 2. READING ==================== -->
+  <section id="tab-reading" class="panel">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h2 class="panel-h">📖 Tappa 2: Reading INVALSI — "Leo's Busy Day"</h2>
+        <p class="panel-desc">Leggi il testo e completa le prove A, B e C in formato INVALSI.</p>
+      </div>
+      <button id="readLeoAloudBtn" class="btn" type="button">🔊 Ascolta il testo</button>
+    </div>
+
+    <article class="story-box">
+      <p>Hi! My name is Leo and I am ten years old. I live in Bristol with my parents and my little sister, Mia.</p>
+      <p>From Monday to Friday, I <strong>always</strong> wake up at seven o'clock. I get up, wash my face and have breakfast with my family. I <strong>usually</strong> eat cereal and drink orange juice, because I <strong>never</strong> drink coffee! At eight o'clock, I go to school by bus with my best friend, Tom. We are <strong>never</strong> late.</p>
+      <p>School finishes at three o'clock. When I get home, I <strong>always</strong> have a snack and do my homework in my bedroom. On Tuesday and Thursday, I <strong>often</strong> play basketball in the park. When it rains, I stay at home and <strong>sometimes</strong> play video games or watch TV.</p>
+      <p>In the evening, we have dinner at half past seven. My dad <strong>usually</strong> cooks pasta or chicken. After dinner, I brush my teeth and I <strong>often</strong> read a comic book in bed. I go to sleep at nine o'clock... well, on Saturday I <strong>sometimes</strong> go to bed at ten!</p>
+    </article>
+
+    <div>
+      <h3 style="margin:4px 0 8px; font-size:1.05rem;">Parte A — Multiple Choice (Scegli A, B, C o D)</h3>
+      <div class="ex-badge"><strong>0. How old is Leo?</strong> (Esempio) → <strong>C. 10</strong> ✅</div>
+      <div id="readingMcContainer" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
+    </div>
+
+    <div>
+      <h3 style="margin:4px 0 8px; font-size:1.05rem;">Parte B — True or False? (T = Vero · F = Falso)</h3>
+      <div class="ex-badge"><strong>0.</strong> Leo lives with his parents and his brother. (Esempio) → <strong>F (False)</strong> ✅</div>
+      <div id="readingTfContainer" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
+    </div>
+
+    <div>
+      <h3 style="margin:4px 0 8px; font-size:1.05rem;">Parte C — Short Answers (Massimo 4 parole)</h3>
+      <div class="ex-badge"><strong>0.</strong> Who is Mia? → <em>Leo's little sister.</em> ✅</div>
+      <div id="readingSaContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; margin-top:10px;"></div>
+    </div>
+
+    <div class="footer-bar">
+      <button id="checkReadingBtn" class="btn btn-primary" type="button">✅ Controlla Reading</button>
+      <span id="readingFeedback" class="feedback"></span>
+      <button class="btn next-btn" data-next="listening" type="button">Vai al Listening ➡️</button>
+    </div>
+  </section>
+
+  <!-- ==================== 3. LISTENING ==================== -->
+  <section id="tab-listening" class="panel">
+    <div>
+      <h2 class="panel-h">🎧 Tappa 3: Listening INVALSI — "Emma's Week"</h2>
+      <p class="panel-desc">Ascolta Emma parlare della sua settimana (2 volte, come alle prove INVALSI) e spunta la casella giusta.</p>
+    </div>
+
+    <div class="card" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button id="playEmmaNormal" class="btn btn-primary" type="button">🔊 Ascolta Emma (Normale)</button>
+        <button id="playEmmaSlow" class="btn" type="button">🐢 Ascolta Piano</button>
+        <button id="stopSpeechBtn" class="btn" type="button">⏹️ Stop</button>
+      </div>
+      <button id="toggleEmmaScript" class="btn" type="button">👩‍🏫 Testo per l'insegnante</button>
+    </div>
+
+    <div id="emmaScriptBox" class="card hidden" style="background:#fffbeb; border-color:#fcd34d;">
+      <div style="font-size:0.82rem; font-weight:800; color:#92400e; margin-bottom:6px;">SCRIPT PER L'INSEGNANTE (leggere due volte):</div>
+      <p style="margin:0; font-style:italic; line-height:1.6;">
+        "Hello everyone, I'm Emma! Let me tell you about my week. Every morning I <strong>always</strong> brush my teeth after breakfast — that's super important! After school, I am usually very busy. I <strong>often</strong> listen to music in my room while I draw pictures. What about sports? Well, I <strong>sometimes</strong> ride my bike in the afternoon with my cousin, especially on Wednesday. And what do I <strong>never</strong> do? I <strong>never</strong> tidy my room on Monday because I have too much homework... sorry, Mum! Oh, and on Sunday morning I <strong>always</strong> make pancakes with my dad!"
+      </p>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Emma's Activity</th>
+            <th class="center">always</th>
+            <th class="center">often</th>
+            <th class="center">sometimes</th>
+            <th class="center">never</th>
+          </tr>
+        </thead>
+        <tbody id="listeningTableBody">
+          <tr style="color:var(--muted);">
+            <td><strong>0.</strong> Brush teeth after breakfast <em>(Esempio)</em></td>
+            <td class="center">✅</td>
+            <td class="center">—</td>
+            <td class="center">—</td>
+            <td class="center">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:800; margin-bottom:6px;">5. Why doesn't Emma tidy her room on Monday?</div>
+      <div class="opt-grid">
+        <label class="opt-label"><input type="radio" name="emmaQ5" value="A" /> A. Because she rides her bike</label>
+        <label class="opt-label"><input type="radio" name="emmaQ5" value="B" /> B. Because she has too much homework</label>
+        <label class="opt-label"><input type="radio" name="emmaQ5" value="C" /> C. Because she makes pancakes</label>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <button id="checkListeningBtn" class="btn btn-primary" type="button">✅ Controlla Listening</button>
+      <span id="listeningFeedback" class="feedback"></span>
+      <button class="btn next-btn" data-next="writing" type="button">Vai al Writing ➡️</button>
+    </div>
+  </section>
+
+  <!-- ==================== 4. WRITING ==================== -->
+  <section id="tab-writing" class="panel">
+    <div>
+      <h2 class="panel-h">✍️ Tappa 4: Writing Lab</h2>
+      <p class="panel-desc">Riordina le parole toccando le tessere, allena la 3ª persona singolare e scrivi la tua giornata tipo!</p>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 10px; font-size:1.05rem;">Sfida 1 — Costruisci le frasi (tocca le parole nell'ordine giusto)</h3>
+      <div id="wordOrderContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div style="border-top:2px solid #f1f5f9; padding-top:12px;">
+      <h3 style="margin:0 0 10px; font-size:1.05rem;">Sfida 2 — Attento a He / She / It! Scegli la forma corretta</h3>
+      <div id="thirdPersonContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px;"></div>
+    </div>
+
+    <div style="border-top:2px solid #f1f5f9; padding-top:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <h3 style="margin:0; font-size:1.05rem;">Sfida 3 — Scrivi "My Typical Day" (usa almeno 3 avverbi di frequenza!)</h3>
+        <button id="copyWritingBtn" class="btn" type="button">📋 Copia testo</button>
+      </div>
+      <div id="writingWordBank" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+        <span style="font-size:0.85rem; color:var(--muted); align-self:center; font-weight:700;">Clicca per inserire:</span>
+      </div>
+      <textarea id="guidedWritingInput" rows="5" placeholder="Hi! My name is ...&#10;In the morning, I always wake up at ...&#10;After school, I usually ...&#10;In the evening, I sometimes ...&#10;I never ..."></textarea>
+      <div id="writingAutoCheck" style="display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; font-size:0.88rem; font-weight:700; color:var(--muted);"></div>
+    </div>
+
+    <div class="footer-bar">
+      <button id="checkWritingBtn" class="btn btn-primary" type="button">✅ Controlla Writing</button>
+      <span id="writingFeedback" class="feedback"></span>
+      <button class="btn next-btn" data-next="speaking" type="button">Vai allo Speaking ➡️</button>
+    </div>
+  </section>
+
+  <!-- ==================== 5. SPEAKING ==================== -->
+  <section id="tab-speaking" class="panel">
+    <div>
+      <h2 class="panel-h">🗣️ Tappa 5: Speaking Arena (A coppie o alla LIM!)</h2>
+      <p class="panel-desc">Gira la ruota delle domande, intervista i compagni e gioca a <em>Two Truths and a Lie</em>!</p>
+    </div>
+
+    <!-- Speaking Wheel -->
+    <div class="wheel-stage">
+      <button id="spinWheelBtn" class="wheel-btn" type="button">
+        <span id="wheelIcon" style="font-size:2.2rem;">🎡</span>
+        <span>GIRA!</span>
+      </button>
+      <div class="prompt-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:0.82rem; font-weight:800; color:#6d28d9; text-transform:uppercase;">Domanda estratta</span>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <span id="speakingTimerDisplay" style="font-weight:800; font-size:0.9rem;">⏱️ 30s</span>
+            <button id="startTimerBtn" class="btn" style="padding:5px 10px; font-size:0.82rem;" type="button">Avvia Timer</button>
+          </div>
+        </div>
+        <div id="speakingQuestionText" class="prompt-q">Clicca "GIRA!" per estrarre una sfida!</div>
+        <div id="speakingStarterText" style="font-size:0.9rem; color:var(--muted);">Aiuto per rispondere: <em>"I usually..."</em></div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <button id="speakPromptBtn" class="btn" type="button">🔊 Ascolta domanda</button>
+          <button id="speakingDoneBtn" class="btn btn-green" type="button">⭐ Risposta detta! (<span id="speakingCount">0</span>)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Find Someone Who -->
+    <div>
+      <h3 style="margin:4px 0 6px; font-size:1.05rem;">🕵️ Find Someone Who... (Chiedi: <em>"How often do you...?"</em>)</h3>
+      <p style="margin:0 0 10px; font-size:0.88rem; color:var(--muted);">Scrivi il nome del compagno che risponde "Sì, corrisponde a me!" (massimo 2 volte lo stesso nome).</p>
+      <div id="surveyGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:8px;"></div>
+    </div>
+
+    <!-- Two Truths and a Lie -->
+    <div class="card" style="background:#f8fafc;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <h3 style="margin:0; font-size:1.05rem;">🎭 Two Truths and a Lie (2 Verità e 1 Bugia)</h3>
+        <button id="ttalToggleModeBtn" class="btn btn-amber" type="button">🕵️ Nascondi la bugia ai compagni</button>
+      </div>
+      <p style="margin:0 0 10px; font-size:0.88rem; color:var(--muted);">Scrivi 3 frasi su di te con gli avverbi di frequenza, segna qual è la bugia, poi premi "Nascondi" per sfidare la classe!</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong>1.</strong>
+          <input type="text" id="ttal1" value="I always brush my teeth in the morning." style="flex:1;" />
+          <label class="ttal-secret" style="font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px;"><input type="radio" name="ttalLie" value="1" /> Bugia</label>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong>2.</strong>
+          <input type="text" id="ttal2" value="I sometimes play football after school." style="flex:1;" />
+          <label class="ttal-secret" style="font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px;"><input type="radio" name="ttalLie" value="2" /> Bugia</label>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong>3.</strong>
+          <input type="text" id="ttal3" value="I never eat pizza on Saturday!" style="flex:1;" />
+          <label class="ttal-secret" style="font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:4px;"><input type="radio" name="ttalLie" value="3" checked /> Bugia</label>
+        </div>
+      </div>
+      <div id="ttalGuessBar" class="hidden" style="margin-top:12px; display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+        <strong>Qual è la bugia?</strong>
+        <button class="btn ttal-guess" data-guess="1" type="button">Frase 1</button>
+        <button class="btn ttal-guess" data-guess="2" type="button">Frase 2</button>
+        <button class="btn ttal-guess" data-guess="3" type="button">Frase 3</button>
+        <span id="ttalResult" class="feedback"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. DIPLOMA ==================== -->
+  <section id="tab-diploma" class="panel" style="align-items:center; text-align:center;">
+    <div style="font-size:3.5rem;">🏆</div>
+    <h2 class="panel-h" style="font-size:1.6rem;">English Day — Riepilogo &amp; Diploma</h2>
+    <p class="panel-desc">Ecco i risultati delle tue prove in stile INVALSI!</p>
+
+    <div class="diploma-grid">
+      <div class="dip-card"><div>☀️ Warm-up</div><div id="sum-warmup" class="dip-score">0 / 5</div></div>
+      <div class="dip-card"><div>📖 Reading</div><div id="sum-reading" class="dip-score">0 / 8</div></div>
+      <div class="dip-card"><div>🎧 Listening</div><div id="sum-listening" class="dip-score">0 / 5</div></div>
+      <div class="dip-card"><div>✍️ Writing</div><div id="sum-writing" class="dip-score">0 / 7</div></div>
+    </div>
+
+    <div id="diplomaMessage" class="rule-box" style="max-width:650px; width:100%; font-weight:800;">
+      Completa le 4 tappe e poi torna qui per vedere il tuo livello!
+    </div>
+
+    <button id="resetAllBtn" class="btn" type="button">🔄 Ricomincia tutto da capo</button>
+  </section>
+
+</div>
+
+<script>
+  const scores = { warmup: 0, reading: 0, listening: 0, writing: 0 };
+  let speakingCompleted = 0;
+
+  function updateScoreUI() {
+    const total = scores.warmup + scores.reading + scores.listening + scores.writing;
+    document.getElementById('totalScoreDisplay').textContent = total;
+    const pct = Math.round((total / 25) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = pct + '% completato';
+
+    document.getElementById('badge-warmup').textContent = scores.warmup + '/5 ⭐';
+    document.getElementById('badge-reading').textContent = scores.reading + '/8 ⭐';
+    document.getElementById('badge-listening').textContent = scores.listening + '/5 ⭐';
+    document.getElementById('badge-writing').textContent = scores.writing + '/7 ⭐';
+
+    document.getElementById('sum-warmup').textContent = scores.warmup + ' / 5';
+    document.getElementById('sum-reading').textContent = scores.reading + ' / 8';
+    document.getElementById('sum-listening').textContent = scores.listening + ' / 5';
+    document.getElementById('sum-writing').textContent = scores.writing + ' / 7';
+
+    const msg = document.getElementById('diplomaMessage');
+    if (total >= 22) msg.textContent = `🌟 INVALSI Master! (${total}/25) — Amazing job! Conosci benissimo gli avverbi di frequenza!`;
+    else if (total >= 15) msg.textContent = `👏 Great work! (${total}/25) — Ottimo risultato, ripassa solo qualche piccolo dettaglio!`;
+    else if (total > 0) msg.textContent = `💪 Buon inizio! (${total}/25) — Completa tutte le tappe per raggiungere 25 stelle!`;
+    else msg.textContent = 'Completa le 4 tappe e poi torna qui per vedere il tuo livello!';
+  }
+
+  // TABS
+  const tabBtns = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('main > .panel, .wrap > section.panel:not(#helpPanel)');
+  function switchTab(id) {
+    document.querySelectorAll('.wrap > section.panel:not(#helpPanel)').forEach(p => p.classList.remove('on'));
+    document.getElementById('tab-' + id).classList.add('on');
+    tabBtns.forEach(b => b.classList.toggle('on', b.dataset.tab === id));
+  }
+  tabBtns.forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+  document.querySelectorAll('.next-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.next)));
+
+  const helpPanel = document.getElementById('helpPanel');
+  document.getElementById('toggleHelpBtn').addEventListener('click', () => helpPanel.classList.toggle('hidden'));
+  document.getElementById('closeHelpBtn').addEventListener('click', () => helpPanel.classList.add('hidden'));
+
+  // SPEECH (via educational-speech.js?v=3.0, chunked by sentence for long passages)
+  let speechQueueToken = 0;
+  let speechPauseTimer = null;
+
+  function stopAllSpeech() {
+    speechQueueToken++;
+    if (speechPauseTimer) {
+      clearTimeout(speechPauseTimer);
+      speechPauseTimer = null;
+    }
+    if (typeof stopSpeech === 'function') stopSpeech();
+  }
+
+  function speakText(text, rate = 0.9) {
+    stopAllSpeech();
+    if (typeof speakEnglish !== 'function') return;
+    const chunks = String(text)
+      .split(/(?<=[.!?])\s+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+    if (!chunks.length) return;
+
+    const token = speechQueueToken;
+    const pauseMs = rate < 0.8 ? 450 : 120;
+    let idx = 0;
+
+    function nextChunk() {
+      if (token !== speechQueueToken || idx >= chunks.length) return;
+      const chunk = chunks[idx++];
+      speakEnglish(chunk, () => {
+        if (token !== speechQueueToken) return;
+        speechPauseTimer = setTimeout(nextChunk, pauseMs);
+      });
+    }
+    nextChunk();
+  }
+
+  // 1. WARM-UP
+  const meterItems = [
+    { id: 'm1', pct: 100, label: '100% (tutti i giorni)', answer: 'always' },
+    { id: 'm2', pct: 60, label: '60% (spesso)', answer: 'often' },
+    { id: 'm3', pct: 0, label: '0% (mai!)', answer: 'never' }
+  ];
+  const advOpts = ['always', 'usually', 'often', 'sometimes', 'never'];
+  const meterBox = document.getElementById('warmupMeterContainer');
+  meterItems.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.style.cssText = 'display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;';
+    d.innerHTML = `
+      <div style="flex:1; min-width:200px;">
+        <div style="font-weight:800; font-size:0.92rem; margin-bottom:6px;">${it.label}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${it.pct}%;"></div></div>
+      </div>
+      <select id="${it.id}">
+        <option value="">-- Scegli avverbio --</option>
+        ${advOpts.map(a => `<option value="${a}">${a}</option>`).join('')}
+      </select>
+    `;
+    meterBox.appendChild(d);
+  });
+
+  const posQuiz = [
+    { id: 'p1', q: '1. Scegli la frase giusta (verbo principale):', opts: ['I brush always my teeth.', 'I always brush my teeth.', 'Always I brush my teeth.'], correct: 1 },
+    { id: 'p2', q: '2. Scegli la frase giusta (con il verbo TO BE):', opts: ['We are never late for school.', 'We never are late for school.', 'Are we late never for school.'], correct: 0 }
+  ];
+  const posBox = document.getElementById('warmupPosContainer');
+  posQuiz.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.innerHTML = `<div style="font-weight:800; font-size:0.95rem;">${it.q}</div><div class="opt-grid">${it.opts.map((o, i) => `<label class="opt-label"><input type="radio" name="${it.id}" value="${i}" /> ${o}</label>`).join('')}</div>`;
+    posBox.appendChild(d);
+  });
+
+  document.getElementById('checkWarmupBtn').addEventListener('click', () => {
+    let pts = 0;
+    meterItems.forEach(it => {
+      const ok = document.getElementById(it.id).value === it.answer;
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    posQuiz.forEach(it => {
+      const sel = document.querySelector(`input[name="${it.id}"]:checked`);
+      const ok = sel && Number(sel.value) === it.correct;
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    scores.warmup = pts;
+    updateScoreUI();
+    document.getElementById('warmupFeedback').textContent = pts === 5 ? '🌟 Perfetto! 5/5 stelle!' : `Punteggio: ${pts}/5. Correggi i riquadri rossi!`;
+  });
+
+  // 2. READING
+  const leoText = "Hi! My name is Leo and I am ten years old. I live in Bristol with my parents and my little sister, Mia. From Monday to Friday, I always wake up at seven o'clock. I get up, wash my face and have breakfast with my family. I usually eat cereal and drink orange juice, because I never drink coffee! At eight o'clock, I go to school by bus with my best friend, Tom. We are never late. School finishes at three o'clock. When I get home, I always have a snack and do my homework in my bedroom. On Tuesday and Thursday, I often play basketball in the park. When it rains, I stay at home and sometimes play video games or watch TV. In the evening, we have dinner at half past seven. My dad usually cooks pasta or chicken. After dinner, I brush my teeth and I often read a comic book in bed. I go to sleep at nine o'clock, well, on Saturday I sometimes go to bed at ten!";
+  document.getElementById('readLeoAloudBtn').addEventListener('click', () => speakText(leoText, 0.88));
+
+  const readingMc = [
+    { id: 'rmc1', q: '1. What does Leo usually have for breakfast?', opts: ['A. Milk and biscuits', 'B. Coffee and bread', 'C. Tea and cake', 'D. Cereal and orange juice'], correct: 3 },
+    { id: 'rmc2', q: '2. How does Leo go to school?', opts: ['A. By bike', 'B. By bus', 'C. By car', 'D. On foot'], correct: 1 },
+    { id: 'rmc3', q: '3. What does Leo do when it rains?', opts: ['A. He plays basketball in the park', 'B. He goes to Tom’s house', 'C. He plays video games or watches TV', 'D. He cooks dinner with his dad'], correct: 2 }
+  ];
+  const mcBox = document.getElementById('readingMcContainer');
+  readingMc.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.innerHTML = `<div style="font-weight:800;">${it.q}</div><div class="opt-grid">${it.opts.map((o, i) => `<label class="opt-label"><input type="radio" name="${it.id}" value="${i}" /> ${o}</label>`).join('')}</div>`;
+    mcBox.appendChild(d);
+  });
+
+  const readingTf = [
+    { id: 'rtf1', text: '1. Leo always wakes up at 7:00 on school days.', correct: 'T' },
+    { id: 'rtf2', text: '2. Leo sometimes drinks coffee for breakfast.', correct: 'F' },
+    { id: 'rtf3', text: '3. Leo plays basketball in the park twice a week.', correct: 'T' }
+  ];
+  const tfBox = document.getElementById('readingTfContainer');
+  readingTf.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.style.cssText = 'display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;';
+    d.innerHTML = `<span style="font-weight:700;">${it.text}</span><div style="display:flex; gap:8px;"><label class="opt-label" style="padding:6px 12px;"><input type="radio" name="${it.id}" value="T" /> T</label><label class="opt-label" style="padding:6px 12px;"><input type="radio" name="${it.id}" value="F" /> F</label></div>`;
+    tfBox.appendChild(d);
+  });
+
+  const readingSa = [
+    { id: 'rsa1', q: "1. Who is Leo's best friend?", accepted: ['tom', 'his best friend tom', 'tom is his friend'] },
+    { id: 'rsa2', q: '2. What does Leo often read in bed?', accepted: ['a comic book', 'comic book', 'comics', 'comic books'] }
+  ];
+  const saBox = document.getElementById('readingSaContainer');
+  readingSa.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.innerHTML = `<label for="${it.id}" style="display:block; font-weight:800; margin-bottom:6px;">${it.q}</label><input id="${it.id}" type="text" placeholder="Scrivi max 4 parole..." style="width:100%;" />`;
+    saBox.appendChild(d);
+  });
+
+  document.getElementById('checkReadingBtn').addEventListener('click', () => {
+    let pts = 0;
+    readingMc.forEach(it => {
+      const sel = document.querySelector(`input[name="${it.id}"]:checked`);
+      const ok = sel && Number(sel.value) === it.correct;
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    readingTf.forEach(it => {
+      const sel = document.querySelector(`input[name="${it.id}"]:checked`);
+      const ok = sel && sel.value === it.correct;
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    readingSa.forEach(it => {
+      const val = document.getElementById(it.id).value.trim().toLowerCase().replace(/[.!]/g, '');
+      const ok = it.accepted.includes(val);
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    scores.reading = pts;
+    updateScoreUI();
+    document.getElementById('readingFeedback').textContent = pts === 8 ? '🌟 Fantastico! 8/8 nel Reading!' : `Punteggio Reading: ${pts}/8. Controlla i riquadri rossi!`;
+  });
+
+  // 3. LISTENING
+  const emmaScript = "Hello everyone, I'm Emma! Let me tell you about my week. Every morning I always brush my teeth after breakfast, that's super important! After school, I am usually very busy. I often listen to music in my room while I draw pictures. What about sports? Well, I sometimes ride my bike in the afternoon with my cousin, especially on Wednesday. And what do I never do? I never tidy my room on Monday because I have too much homework, sorry Mum! Oh, and on Sunday morning I always make pancakes with my dad!";
+  document.getElementById('playEmmaNormal').addEventListener('click', () => speakText(emmaScript, 0.92));
+  document.getElementById('playEmmaSlow').addEventListener('click', () => speakText(emmaScript, 0.72));
+  document.getElementById('stopSpeechBtn').addEventListener('click', stopAllSpeech);
+  document.getElementById('toggleEmmaScript').addEventListener('click', () => document.getElementById('emmaScriptBox').classList.toggle('hidden'));
+
+  const listeningRows = [
+    { id: 'l1', label: '1. Listen to music in her room', answer: 'often' },
+    { id: 'l2', label: '2. Ride her bike in the afternoon', answer: 'sometimes' },
+    { id: 'l3', label: '3. Tidy her room on Monday', answer: 'never' },
+    { id: 'l4', label: '4. Make pancakes with her dad on Sunday', answer: 'always' }
+  ];
+  const lTbody = document.getElementById('listeningTableBody');
+  listeningRows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + r.id;
+    tr.innerHTML = `<td style="font-weight:700;">${r.label}</td>` + ['always', 'often', 'sometimes', 'never'].map(c => `<td class="center"><input type="radio" name="${r.id}" value="${c}" /></td>`).join('');
+    lTbody.appendChild(tr);
+  });
+
+  document.getElementById('checkListeningBtn').addEventListener('click', () => {
+    let pts = 0;
+    listeningRows.forEach(r => {
+      const sel = document.querySelector(`input[name="${r.id}"]:checked`);
+      const ok = sel && sel.value === r.answer;
+      if (ok) pts++;
+      document.getElementById('row-' + r.id).style.background = ok ? '#f0fdf4' : '#fef2f2';
+    });
+    const q5 = document.querySelector('input[name="emmaQ5"]:checked');
+    if (q5 && q5.value === 'B') pts++;
+    scores.listening = pts;
+    updateScoreUI();
+    document.getElementById('listeningFeedback').textContent = pts === 5 ? '🎧 Orecchio d’oro! 5/5!' : `Punteggio Listening: ${pts}/5. Riascolta Emma!`;
+  });
+
+  // 4. WRITING
+  const woTasks = [
+    { id: 'wo1', hint: 'Frase affermativa (Marco / calcio / venerdì):', words: ['usually', 'football', 'Marco', 'plays', 'on Friday.'], answer: 'Marco usually plays football on Friday.' },
+    { id: 'wo2', hint: 'Con il verbo TO BE (noi / mai / in ritardo):', words: ['late', 'never', 'We', 'are', 'for school.'], answer: 'We are never late for school.' },
+    { id: 'wo3', hint: 'Domanda sulla frequenza (Quanto spesso...?):', words: ['do', 'read', 'often', 'How', 'you', 'a book?'], answer: 'How often do you read a book?' }
+  ];
+  const woState = {};
+  const woBox = document.getElementById('wordOrderContainer');
+
+  function renderWO(task) {
+    const el = document.getElementById('wo-card-' + task.id);
+    const st = woState[task.id];
+    const ans = el.querySelector('.wo-answer');
+    const bank = el.querySelector('.wo-bank');
+    ans.innerHTML = '';
+    if (!st.selected.length) {
+      ans.innerHTML = '<span style="font-size:0.85rem; color:var(--muted);">Tocca le parole qui sotto per costruire la frase...</span>';
+    } else {
+      st.selected.forEach((w, idx) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'chip placed';
+        b.textContent = w.text;
+        b.addEventListener('click', () => { st.selected.splice(idx, 1); st.bank.push(w); renderWO(task); });
+        ans.appendChild(b);
+      });
+    }
+    bank.innerHTML = '';
+    st.bank.forEach((w, idx) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = w.text;
+      b.addEventListener('click', () => { st.bank.splice(idx, 1); st.selected.push(w); renderWO(task); });
+      bank.appendChild(b);
+    });
+  }
+
+  woTasks.forEach(t => {
+    woState[t.id] = { bank: t.words.map((w, i) => ({ id: i, text: w })), selected: [] };
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'wo-card-' + t.id;
+    d.innerHTML = `
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span style="font-weight:800; font-size:0.92rem;">${t.hint}</span>
+        <button type="button" class="wo-reset" style="background:none; border:none; color:var(--muted); text-decoration:underline; cursor:pointer; font-weight:700;">Azzera</button>
+      </div>
+      <div class="wo-answer"></div>
+      <div class="wo-bank"></div>
+    `;
+    d.querySelector('.wo-reset').addEventListener('click', () => {
+      woState[t.id] = { bank: t.words.map((w, i) => ({ id: i, text: w })), selected: [] };
+      d.className = 'card';
+      renderWO(t);
+    });
+    woBox.appendChild(d);
+    renderWO(t);
+  });
+
+  const tpTasks = [
+    { id: 'tp1', pre: '1. Tom usually', post: 'milk for breakfast.', opts: ['have', 'has', 'haves'], answer: 'has' },
+    { id: 'tp2', pre: '2. My sister never', post: 'horror films.', opts: ['watch', 'watchs', 'watches'], answer: 'watches' },
+    { id: 'tp3', pre: '3. Luca often', post: 'English at home.', opts: ['study', 'studys', 'studies'], answer: 'studies' }
+  ];
+  const tpBox = document.getElementById('thirdPersonContainer');
+  tpTasks.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.id = 'card-' + it.id;
+    d.style.cssText = 'display:flex; flex-wrap:wrap; align-items:center; gap:6px; font-weight:700;';
+    d.innerHTML = `<span>${it.pre}</span><select id="${it.id}"><option value="">...</option>${it.opts.map(o => `<option value="${o}">${o}</option>`).join('')}</select><span>${it.post}</span>`;
+    tpBox.appendChild(d);
+  });
+
+  const bankWords = ['always', 'usually', 'often', 'sometimes', 'never', 'wake up', 'have breakfast', 'do homework', 'play football', 'read a book', 'go to bed'];
+  const writingInput = document.getElementById('guidedWritingInput');
+  const wordBankDiv = document.getElementById('writingWordBank');
+  bankWords.forEach(w => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.style.padding = '5px 10px';
+    b.textContent = '+ ' + w;
+    b.addEventListener('click', () => {
+      const cur = writingInput.value;
+      writingInput.value = cur + (cur && !cur.endsWith(' ') && !cur.endsWith('\n') ? ' ' : '') + w + ' ';
+      writingInput.focus();
+      evalWriting();
+    });
+    wordBankDiv.appendChild(b);
+  });
+
+  function evalWriting() {
+    const txt = writingInput.value.toLowerCase();
+    const used = advOpts.filter(a => new RegExp(`\\b${a}\\b`).test(txt));
+    const hasI = /\bi\b/.test(txt);
+    const longOk = txt.trim().length >= 45;
+    document.getElementById('writingAutoCheck').innerHTML = `
+      <span>${used.length >= 3 ? '✅' : '⬜'} Almeno 3 avverbi (${used.length}/3)</span>
+      <span>${hasI ? '✅' : '⬜'} Soggetto "I"</span>
+      <span>${longOk ? '✅' : '⬜'} Testo completo</span>
+    `;
+    return used.length >= 3 && hasI && longOk;
+  }
+  writingInput.addEventListener('input', evalWriting);
+  evalWriting();
+
+  document.getElementById('copyWritingBtn').addEventListener('click', () => {
+    if (navigator.clipboard && writingInput.value.trim()) {
+      navigator.clipboard.writeText(writingInput.value);
+      document.getElementById('copyWritingBtn').textContent = '✅ Copiato!';
+      setTimeout(() => { document.getElementById('copyWritingBtn').textContent = '📋 Copia testo'; }, 1500);
+    }
+  });
+
+  document.getElementById('checkWritingBtn').addEventListener('click', () => {
+    let pts = 0;
+    woTasks.forEach(t => {
+      const ok = woState[t.id].selected.map(o => o.text).join(' ') === t.answer;
+      if (ok) pts++;
+      document.getElementById('wo-card-' + t.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    tpTasks.forEach(it => {
+      const ok = document.getElementById(it.id).value === it.answer;
+      if (ok) pts++;
+      document.getElementById('card-' + it.id).className = 'card ' + (ok ? 'ok' : 'err');
+    });
+    if (evalWriting()) pts++;
+    scores.writing = pts;
+    updateScoreUI();
+    document.getElementById('writingFeedback').textContent = pts === 7 ? '🌟 Bravissimo! 7/7 nel Writing!' : `Punteggio Writing: ${pts}/7.`;
+  });
+
+  // 5. SPEAKING
+  const speakingPrompts = [
+    { q: 'What do you ALWAYS do in the morning?', starter: 'In the morning, I always...' },
+    { q: 'How often do you play video games?', starter: 'I usually / sometimes / never play video games...' },
+    { q: 'What do you NEVER eat for breakfast?', starter: 'I never eat ... for breakfast!' },
+    { q: 'How often do you tidy your room?', starter: 'I ... tidy my room on...' },
+    { q: 'What do you USUALLY do on Sunday?', starter: 'On Sunday, I usually...' },
+    { q: 'Are you EVER late for school?', starter: 'No, I am never late! / Yes, I am sometimes late!' },
+    { q: 'How often do you read a comic or a book?', starter: 'I often / sometimes read...' },
+    { q: 'What do you OFTEN do after homework?', starter: 'After homework, I often...' }
+  ];
+  let curPrompt = speakingPrompts[0];
+
+  document.getElementById('spinWheelBtn').addEventListener('click', () => {
+    const icon = document.getElementById('wheelIcon');
+    icon.classList.remove('spinning');
+    void icon.offsetWidth;
+    icon.classList.add('spinning');
+    curPrompt = speakingPrompts[Math.floor(Math.random() * speakingPrompts.length)];
+    setTimeout(() => {
+      document.getElementById('speakingQuestionText').textContent = curPrompt.q;
+      document.getElementById('speakingStarterText').innerHTML = `Aiuto per rispondere: <em>"${curPrompt.starter}"</em>`;
+    }, 320);
+  });
+
+  document.getElementById('speakPromptBtn').addEventListener('click', () => speakText(curPrompt.q, 0.88));
+  document.getElementById('speakingDoneBtn').addEventListener('click', () => {
+    speakingCompleted++;
+    document.getElementById('speakingCount').textContent = speakingCompleted;
+    document.getElementById('badge-speaking').textContent = speakingCompleted + ' sfide ⭐';
+  });
+
+  let timerInt = null;
+  document.getElementById('startTimerBtn').addEventListener('click', () => {
+    clearInterval(timerInt);
+    let s = 30;
+    const disp = document.getElementById('speakingTimerDisplay');
+    disp.textContent = '⏱️ 30s';
+    timerInt = setInterval(() => {
+      s--;
+      disp.textContent = s > 0 ? '⏱️ ' + s + 's' : '⏰ Time is up!';
+      if (s <= 0) clearInterval(timerInt);
+    }, 1000);
+  });
+
+  const surveyItems = [
+    'always wakes up before 7:00',
+    'never eats vegetables',
+    'usually plays a sport after school',
+    'often reads comics or books',
+    'sometimes helps with cooking at home',
+    'never watches TV in the morning'
+  ];
+  const surveyGrid = document.getElementById('surveyGrid');
+  surveyItems.forEach(txt => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 12px;';
+    d.innerHTML = `<span style="font-size:0.9rem;">...<strong>${txt}</strong></span><input type="text" placeholder="Nome" style="width:120px; padding:5px 8px;" />`;
+    surveyGrid.appendChild(d);
+  });
+
+  let ttalHidden = false;
+  const ttalBtn = document.getElementById('ttalToggleModeBtn');
+  const ttalGuessBar = document.getElementById('ttalGuessBar');
+  ttalBtn.addEventListener('click', () => {
+    ttalHidden = !ttalHidden;
+    document.querySelectorAll('.ttal-secret').forEach(el => el.classList.toggle('hidden', ttalHidden));
+    ttalGuessBar.classList.toggle('hidden', !ttalHidden);
+    document.getElementById('ttalResult').textContent = '';
+    ttalBtn.textContent = ttalHidden ? '✏️ Modifica frasi' : '🕵️ Nascondi la bugia ai compagni';
+  });
+  document.querySelectorAll('.ttal-guess').forEach(b => {
+    b.addEventListener('click', () => {
+      const lie = document.querySelector('input[name="ttalLie"]:checked').value;
+      const g = b.dataset.guess;
+      document.getElementById('ttalResult').textContent = g === lie ? `🎉 Bravo! La frase ${g} era la bugia!` : `❌ No, la frase ${g} è vera!`;
+    });
+  });
+
+  // RESET
+  document.getElementById('resetAllBtn').addEventListener('click', () => {
+    scores.warmup = 0; scores.reading = 0; scores.listening = 0; scores.writing = 0;
+    speakingCompleted = 0;
+    document.getElementById('speakingCount').textContent = '0';
+    document.getElementById('badge-speaking').textContent = 'Gioca alla LIM!';
+    document.querySelectorAll('input[type="radio"]').forEach(r => { if (!r.name.startsWith('ttal')) r.checked = false; });
+    document.querySelectorAll('select').forEach(s => s.value = '');
+    document.querySelectorAll('#tab-reading input[type="text"]').forEach(i => i.value = '');
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('ok', 'err'));
+    document.querySelectorAll('#listeningTableBody tr').forEach(tr => tr.style.background = '');
+    writingInput.value = '';
+    evalWriting();
+    woTasks.forEach(t => {
+      woState[t.id] = { bank: t.words.map((w, i) => ({ id: i, text: w })), selected: [] };
+      renderWO(t);
+    });
+    ['warmupFeedback', 'readingFeedback', 'listeningFeedback', 'writingFeedback'].forEach(id => document.getElementById(id).textContent = '');
+    updateScoreUI();
+    switchTab('warmup');
+  });
+
+  updateScoreUI();
+</script>
+</body>
+</html>

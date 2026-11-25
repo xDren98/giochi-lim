@@ -1003,9 +1003,8 @@
             soundEnabled = !soundEnabled;
             soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
             btnSoundToggle.innerHTML = soundEnabled ? '<span>🔊</span> Audio ON' : '<span>🔇</span> Audio OFF';
-            if (!soundEnabled && 'speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
+            if (typeof setSpeechEnabled === 'function') setSpeechEnabled(soundEnabled);
+            if (!soundEnabled && typeof stopSpeech === 'function') stopSpeech();
         });
 
         /* ==================== CONFETTI EFFECT ==================== */
@@ -1161,6 +1160,13 @@
                 it: 'Tecnologia',
                 clue: 'In this subject, we explore computer circuits, learn coding basics, and study materials and inventions!',
                 tools: 'Computer, keyboard, robot'
+            },
+            {
+                subject: 'Drama',
+                icon: '🎭',
+                it: 'Teatro',
+                clue: 'In this subject, we act, put on plays, rehearse dialogues, and build confidence on stage!',
+                tools: 'Stage, script, costumes'
             }
         ];
 
@@ -1168,12 +1174,14 @@
         let quizStreak = 0;
         let currentQuestion = null;
         let quizPool = [];
+        let quizLocked = false;
 
         function initQuizPool() {
             quizPool = [...quizDatabase].sort(() => Math.random() - 0.5);
         }
 
         function loadNewQuizQuestion() {
+            quizLocked = false;
             if (quizPool.length === 0) initQuizPool();
             currentQuestion = quizPool.pop();
 
@@ -1213,10 +1221,11 @@
         const streakEl = document.getElementById('quizStreak');
 
         function handleQuizAnswer(card, selectedSubject) {
-            if (!currentQuestion) return;
+            if (!currentQuestion || quizLocked) return;
 
             if (selectedSubject === currentQuestion.subject) {
                 // Correct
+                quizLocked = true;
                 playCorrectChime();
                 card.classList.add('correct-anim');
                 quizScore++;

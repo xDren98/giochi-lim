@@ -942,9 +942,8 @@
             soundEnabled = !soundEnabled;
             soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
             btnSoundToggle.innerHTML = soundEnabled ? '<span>🔊</span> Audio ON' : '<span>🔇</span> Audio OFF';
-            if (!soundEnabled && 'speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
+            if (typeof setSpeechEnabled === 'function') setSpeechEnabled(soundEnabled);
+            if (!soundEnabled && typeof stopSpeech === 'function') stopSpeech();
         });
 
         /* ==================== CONFETTI EFFECT ==================== */
@@ -1035,12 +1034,14 @@
         let detectiveScore = 0;
         let currentTargetShape = null;
         let shapePool = [];
+        let detectiveLocked = false;
 
         function initShapePool() {
             shapePool = [...shapesList, ...shapesList].sort(() => Math.random() - 0.5);
         }
 
         function askDetectiveQuestion() {
+            detectiveLocked = false;
             if (shapePool.length === 0) initShapePool();
             currentTargetShape = shapePool.pop();
 
@@ -1066,10 +1067,11 @@
                 const shapeId = card.dataset.shape;
                 const shapeName = card.dataset.name;
 
-                if (!currentTargetShape) return;
+                if (!currentTargetShape || detectiveLocked) return;
 
                 if (shapeId === currentTargetShape.id) {
                     // CORRECT!
+                    detectiveLocked = true;
                     playSuccessTone();
                     card.classList.add('correct-anim');
                     setTimeout(() => card.classList.remove('correct-anim'), 600);

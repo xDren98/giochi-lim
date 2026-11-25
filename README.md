@@ -5,21 +5,27 @@ Tutti i giochi sono progettati per lezioni coinvolgenti nella scuola primaria, c
 
 ---
 
-## 📁 Struttura del Progetto (8 Giochi Interattivi)
+## 📁 Struttura del Progetto (13 Giochi Interattivi)
 
 ```text
 giochi-lim/
-├── index.html                           # Portale principale con menu per classi, ricerca e fullscreen
-├── README.md                            # Guida del portale
-└── games/                               # Cartella contenente i singoli giochi HTML
-    ├── gioco_LIM_forme_geometriche.html # Classe 1ª: Magic Shapes (Geometria & Inglese)
-    ├── gioco_LIM_body_parts.html        # Classe 2ª: My Body Parts (Abbinamento Parola-Immagine)
-    ├── gioco_LIM_body_adventure.html    # Classe 2ª: The Body Adventure (Simon Says, Monster Lab, Memory)
-    ├── word_image_match.html            # Classe 2ª: Word & Picture Match! (Days, Body, Animals, Food)
-    ├── days_of_the_week.html            # Classe 3ª: Days of the Week (Flashcards, Quiz, Ordinamento)
-    ├── ninja_cat_prepositions.html      # Classe 4ª: Ninja Cat Prepositions (Team Scoreboard & Luoghi)
-    ├── biology_quiz_lim.html            # Classe 4ª: The Great Micro-Quiz (Scienze CLIL: Cellule, Virus, Batteri)
-    └── gioco_LIM_school_subjects.html   # Classe 5ª: School Subjects Challenge (Quiz, Glossario & Badges)
+├── index.html                                  # Portale principale con menu per classi, ricerca e fullscreen
+├── README.md                                   # Guida del portale
+└── games/                                      # Cartella contenente i singoli giochi HTML
+    ├── educational-speech.js                   # Motore pronuncia British English HD (/api/tts + fallback)
+    ├── gioco_LIM_forme_geometriche.html        # Classe 1ª: Magic Shapes (Geometria & Inglese)
+    ├── gioco_LIM_froggy_space.html             # Classe 1ª: Froggy's Space Adventure (In/Out, Left/Right, Front/Back)
+    ├── gioco_LIM_spatial_indicators.html       # Classe 1ª: Where Is It? (Spatial Indicators)
+    ├── gioco_LIM_body_parts.html               # Classe 2ª: My Body Parts (Abbinamento Parola-Immagine)
+    ├── gioco_LIM_my_body_game.html             # Classe 2ª: My Body Game (Word Match & Missing Vowel a squadre)
+    ├── gioco_LIM_body_adventure.html           # Classe 2ª: The Body Adventure (Simon Says, Monster Lab, Memory)
+    ├── word_image_match.html                   # Classe 2ª: Word & Picture Match! (Days, Body, Animals, Food, School, Clothes)
+    ├── days_of_the_week.html                   # Classe 3ª: Days of the Week (Learn, Flashcards, Quiz, Order, Match)
+    ├── ninja_cat_prepositions.html             # Classe 4ª: Ninja Cat Prepositions (Team Scoreboard & Luoghi)
+    ├── biology_quiz_lim.html                   # Classe 4ª: The Great Micro-Quiz (Scienze CLIL: Cellule, Virus, Batteri)
+    ├── gioco_LIM_school_subjects.html          # Classe 5ª: School Subjects Challenge (Quiz, Orario, Speaking & Glossario)
+    ├── gioco_LIM_daily_routine_invalsi.html    # Classe 5ª: A Day in English! — Missione INVALSI (4 Abilità)
+    └── gioco_LIM_avverbi_frequenza_infinito.html # Classe 5ª: Frequency Quest! (Gioco Infinito Avverbi di Frequenza)
 ```
 
 ---
